@@ -2,22 +2,23 @@
 
 ## Project Overview
 
-This repository contains materials for creating a 90-minute applied workshop titled **"From Model to Usable System: Prototyping Deployment & Monitoring"**. The workshop combines conceptual framing, practical prototyping approaches, and a live demo using FastAPI, Streamlit, and MLflow with the Rossmann forecasting project.
+This repository contains materials for a 90-minute applied workshop titled **"From Model to Usable System: Prototyping Deployment"**. The workshop combines conceptual framing, practical prototyping approaches, and a live demo using FastAPI, Streamlit, and MLflow with the Rossmann forecasting project.
 
 ## Purpose
 
-Create a Quarto RevealJS presentation that teaches students:
+A Quarto RevealJS presentation that teaches students:
 - Model deployment fundamentals and practical approaches
-- The gap between notebook models and usable systems
-- Prototyping patterns for ML systems (FastAPI + Streamlit)
-- Basic monitoring concepts and drift detection
+- The gap between MLflow-registered models and usable systems
+- REST APIs and their role in model serving
+- Prototyping patterns for ML systems (FastAPI + Streamlit + MLflow)
 - Practical application through real-world examples
+- Final project MVP expectations and requirements
 
 ## Technology Stack
 
 - **Presentation Format**: Quarto RevealJS
 - **Diagrams**: Mermaid
-- **Demo Stack**: FastAPI, Streamlit, MLflow, (optionally) Evidently
+- **Demo Stack**: FastAPI, Streamlit, MLflow
 - **Example Project**: Rossmann forecasting
 
 ## Key External Dependencies
@@ -34,9 +35,10 @@ This project references several external resources on the local machine:
 3. **Demo Project**: `~/Desktop/Projects/rossmann-forecasting`
    - Real-world example for deployment demonstration
    - Focus on:
-     - FastAPI app (model serving via MLflow)
-     - Streamlit UI (user interaction)
-     - (Optional) Evidently monitoring setup
+     - MLflow model registry (tracking and versioning)
+     - FastAPI app (REST API for model serving)
+     - Streamlit UI (user-friendly dashboard)
+     - System integration (how components connect)
 
 ## Design Principles
 
@@ -66,23 +68,24 @@ This project references several external resources on the local machine:
 
 The workshop follows this progression:
 
-1. **Framing** - Opening hook about model value and usability gap
+1. **The Problem** - Opening hook about model value and usability gap between MLflow experiments and stakeholder interaction
 2. **Deployment Concepts** - What deployment means in practice
 3. **Prototyping** - Shift from production thinking to usable prototypes
-4. **Monitoring** - Why and what to monitor
-5. **Architecture** - System design with FastAPI + Streamlit
-6. **Rossmann Demo** - Real-world workflow demonstration
-7. **Reflection** - Applying concepts to student projects
-8. **Final Project MVP** - Connecting to course final project
+   - Includes architecture slides showing how components connect
+   - Includes Rossmann demo slides integrated within prototyping section
+4. **Getting Started** - Practical steps for students to apply concepts
+5. **Final Project MVP** - Requirements, expectations, grading criteria, and deliverables
 
 ## Core Learning Goals
 
 Students should be able to:
-- Understand deployment as making models accessible and usable
-- Recognize the gap between modeling and stakeholder interaction
+- Understand deployment as making models accessible and usable, not just production infrastructure
+- Recognize the gap between MLflow-registered models and stakeholder interaction
 - Understand the difference between production deployment and prototyping
-- Build a functional ML prototype with FastAPI and Streamlit
-- Understand basic monitoring concepts and drift detection
+- Understand REST APIs and why they're the industry standard for model serving
+- Understand how FastAPI, Streamlit, and MLflow work together to create an ML system
+- Apply these concepts to build their own ML system prototypes
+- Understand MVP expectations: show progress, demo components, have a clear vision
 
 ## File Organization
 
@@ -137,11 +140,13 @@ The presentation follows the conventions established in the model-experimentatio
 ## Success Criteria
 
 The workshop is successful when students:
-- Understand deployment as making models accessible (not just infrastructure)
-- Recognize the value of building usable prototypes
-- Can explain what monitoring captures and why it matters
-- Understand how FastAPI + Streamlit create an ML system
+- Understand deployment as making models accessible and interactive (not just production infrastructure)
+- Recognize the gap between MLflow experiments/registries and stakeholder usability
+- Understand REST APIs as the industry standard for model serving
+- Recognize the value of building usable prototypes over waiting for production infrastructure
+- Understand how FastAPI + Streamlit + MLflow create an integrated ML system
 - Can apply these concepts to build their own project MVPs
+- Understand MVP expectations: demonstrate progress, not perfection
 
 ## Working with This Repository
 
@@ -167,11 +172,73 @@ The demo references the Rossmann forecasting project. Key technical details for 
 - **User inputs**: 7 fields — Store, DayOfWeek, Date, Open, Promo, StateHoliday, SchoolHoliday
 - **Engineered features**: 46 total (calendar, lag, rolling stats, store metadata) — all automated in the API
 - **FastAPI endpoints**: `GET /health`, `GET /model/info`, `POST /model/load`, `POST /predict`
-- **Streamlit pages**: Home (status), Predictions (single + batch tabs), Documentation, Monitoring
+- **Streamlit pages**: Home (system status), Predictions (single + batch tabs)
 - **Model registry**: MLflow with Production/Staging/Archived stages; model name `rossmann-ensemble`
-- **Prediction logging**: SQLite database at `data/monitoring/predictions.db`
-- **Drift detection**: Evidently AI 0.7.20 comparing production features vs training reference data
 - **Key design pattern**: User provides simple inputs; API handles all feature engineering behind the scenes
+- **Launch scripts**: `scripts/start_mlflow.sh`, `scripts/launch_api.sh`, `scripts/launch_dashboard.sh`
+
+**Note**: The Rossmann project includes monitoring capabilities (prediction logging and drift detection with Evidently AI), but these are NOT covered in this workshop. The focus is on building the core ML system prototype.
+
+## Actual Workshop Sections
+
+The final presentation includes these major sections:
+
+1. **Introduction** (slides 1-51)
+   - Title and framing
+   - Workshop agenda and goals
+   - The Problem section: model value, usability gap, stakeholder needs
+
+2. **Deployment Concepts** (slides 52-198)
+   - What is deployment
+   - Production vs. prototyping
+   - The need for usable systems
+
+3. **Prototyping** (slides 199-942)
+   - You don't need production infrastructure
+   - Common prototype stack (Streamlit, FastAPI, MLflow)
+   - System architecture and separation of concerns
+   - Rossmann project overview
+   - Demo slides (FastAPI, Streamlit dashboard, system status)
+   - Getting started guide for students
+
+4. **Final Project MVP** (slides 943-1237)
+   - What is an MVP
+   - MVP expectations: progress over perfection
+   - Requirements (clear vision, working components, demo, plan)
+   - Deliverable: recorded presentation
+   - Grading rubric (detailed 4/2/0 point breakdowns)
+   - Peer review requirement
+   - Submission guidelines
+
+5. **Closing** (slides 1238-end)
+   - Key takeaways (6 main points)
+   - Resources (FastAPI, Streamlit, MLflow, Rossmann project)
+
+## Final Project MVP Details
+
+A significant portion of the workshop covers the Final Project MVP requirements:
+
+**Key Message**: LOW expectations — progress over perfection
+
+**MVP Requirements**:
+1. **Clear vision**: System diagram showing full architecture (even if not built)
+2. **Working components**: Data pipeline + ML model development in progress
+3. **Demo**: Show what's working, even if not fully integrated
+4. **Plan**: Explain challenges and next steps
+
+**Deliverable**: 5-10 minute recorded group presentation covering problem, system diagram, demo, and next steps
+
+**Grading** (20 points total + extra credit):
+- Clarity of Problem & Purpose (4 pts): 4/2/0 point rubric
+- Clarity of System Diagram (4 pts): 4/2/0 point rubric
+- Data Pipeline Implementation (4 pts): 4/2/0 point rubric
+- ML Model Development (4 pts): 4/2/0 point rubric
+- Presentation Quality (4 pts): 4/2/0 point rubric
+- System Integration (Extra Credit): +2/+1/0 points
+
+**Peer Review**: Students must review 2 other presentations with 100+ words of feedback (10% engagement penalty if not completed)
+
+**Philosophy**: Acceptable to have data pipeline working + model training working but NO UI yet. Components don't need to be fully integrated. The goal is showing progress and having a clear vision for completion.
 
 ## Notes for Claude Code
 
@@ -184,3 +251,4 @@ The demo references the Rossmann forecasting project. Key technical details for 
 - Connect concepts back to student final projects and portfolio building
 - When editing slides, preserve the minimal text / rich notes pattern
 - Render after changes to catch Mermaid or formatting errors
+- The workshop emphasizes **progress over perfection** for the MVP — this is a core message throughout
