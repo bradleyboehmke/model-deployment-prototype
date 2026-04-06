@@ -1,0 +1,10 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "From Model to Usable System: Prototyping Deployment & Monitoring"
+  navbar:
+    left:
+      - text: "Workshop Slides"
+        href: workshop/slides/deployment-prototyping.html

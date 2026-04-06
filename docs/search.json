@@ -1,0 +1,443 @@
+[
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#applied-workshops-series",
+    "href": "workshop/slides/deployment-prototyping.html#applied-workshops-series",
+    "title": "From Model to Usable System",
+    "section": "Applied Workshops Series",
+    "text": "Applied Workshops Series\nBridging the gap between classroom and industry\n\nThis series shares best practices and industry standards not always covered in coursework — practical skills that can differentiate you early in your career.\n\nFrame this as part of the applied workshop series. These workshops focus on practical skills that matter in industry but are often underrepresented in coursework. Today we move from experiment tracking into making models actually usable."
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#todays-agenda",
+    "href": "workshop/slides/deployment-prototyping.html#todays-agenda",
+    "title": "From Model to Usable System",
+    "section": "Today’s Agenda",
+    "text": "Today’s Agenda\n\n\nDeployment Concepts: What deployment actually means\nPrototyping Approach: Building usable systems without production infrastructure\nLive Demo: Rossmann forecasting project walkthrough\nYour Final Project MVP: Expectations and getting started\n\n\n\n\n\n\n\n\nToday’s Goal\n\n\nWalk out knowing how to take a trained model and make it into something people can actually use.\n\n\n\n\n\nThis is practical and applied - we’ll start with concepts, build up to architecture, and see a real system\nThe focus is on making models accessible and usable, not production deployment\nWe’ll use the Rossmann project as a concrete example throughout\nBy the end you should be able to start building a prototype for your own final project\nThis workshop bridges the gap between model training and stakeholder interaction"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#when-does-a-model-create-value",
+    "href": "workshop/slides/deployment-prototyping.html#when-does-a-model-create-value",
+    "title": "From Model to Usable System",
+    "section": "When Does a Model Create Value?",
+    "text": "When Does a Model Create Value?\n\n\nExperiments and registered models don’t create value.  They help us find the best model.\n\n\n\n\n\n\n\n\nThe Reality\n\n\nModels don’t create value by existing. They create value by being used.\n\n\n\n\n\nThis is the anchor idea for the entire workshop\nYou’ve learned to track experiments in MLflow and register your best models\nThat helps you understand model performance and select which model to use\nBut tracking and registering a model doesn’t make it usable yet\nValue comes when a stakeholder, a decision-maker, or a system can interact with the model’s predictions\nThe gap between “I selected my best model” and “someone is using this model” is what we’re addressing today"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#most-models-never-get-used",
+    "href": "workshop/slides/deployment-prototyping.html#most-models-never-get-used",
+    "title": "From Model to Usable System",
+    "section": "Most Models Never Get Used",
+    "text": "Most Models Never Get Used\n\n\nWhat typically happens:\n\nWe train hundreds of models during experimentation\nWe select the best model\nResults shared as static reports\nStakeholder can’t interact with it\nModel gets stale and forgotten\n\n\n\n\n\n\nThis is extremely common in industry, not just in school\nDuring experimentation, you may train dozens or hundreds of model variations\nYou select the best performing model and register it in MLflow\nBut then what? Results get shared as a PDF or slide deck\nThe stakeholder can’t ask “what if” questions, can’t try different inputs\nThere’s no way to use the model on new data without calling the data scientist\nOur objective is to create a system around our preferred model that makes it usable\nOver time, without this system, the model just fades away — nobody maintains it, nobody uses it"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#the-gap",
+    "href": "workshop/slides/deployment-prototyping.html#the-gap",
+    "title": "From Model to Usable System",
+    "section": "The Gap",
+    "text": "The Gap\n\n\n\n\n\n\nStakeholders don’t want your code\n\n\nThey want your answers.\n\n\n\n\n\n\nDon’t care about your feature engineering pipeline\nWant to ask: “What will sales look like next week if we run a promotion?”\nWant to upload a spreadsheet and get predictions back\n\n\n\n\n\n\nPut yourself in the stakeholder’s shoes: they don’t care about your feature engineering pipeline\nThey want to ask: “What will sales look like next week if we run a promotion?”\nThey want to upload a spreadsheet and get predictions back\nOur job as data scientists extends beyond modeling — we need to make models accessible\nThis is increasingly a differentiating skill in the job market"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#our-goal",
+    "href": "workshop/slides/deployment-prototyping.html#our-goal",
+    "title": "From Model to Usable System",
+    "section": "Our Goal",
+    "text": "Our Goal\n\n\n\n\n\n\n\nLearning What Goes Into Deployment\n\n\nPart of this class is understanding what it takes to deploy a model.\nThe reality:\n\nFull deployment is extremely challenging\nIt often requires technical support from engineers\nProduction infrastructure takes significant time and resources\n\n\n\n\n\n\nWe start by demonstrating how our models could be usable to stakeholders.\n\n\n\nThis class is about understanding what goes into deploying a model\nThe chapter readings cover more complicated deployment concerns: infrastructure, scaling, security, CI/CD\nBut we need to acknowledge the reality: full production deployment is extremely challenging\nYou will typically have technical support from engineers to make true production deployment happen\nSo where do we start as data scientists?\nThe first step is demonstrating at a basic level how our models could be usable to the stakeholder\nWe focus on building a simplistic ML system that mimics a deployment framework\nThis is often exactly how it works in industry: you start with a simple prototype that proves the concept\nThen, with engineering support, it matures into a true production deployment framework\nToday we’re focusing on that first step: making something usable that demonstrates value"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#what-is-deployment",
+    "href": "workshop/slides/deployment-prototyping.html#what-is-deployment",
+    "title": "From Model to Usable System",
+    "section": "What Is Deployment?",
+    "text": "What Is Deployment?\n\n\n\n\n\n\n\nDeployment\n\n\nMaking a trained model accessible so it can receive inputs and return predictions.\n\n\n\n\n\n\n\n\n\n\nflowchart LR\n    A[\"📥 Input Data\"] --&gt; B[\"🤖 Model\"]\n    B --&gt; C[\"📤 Predictions\"]\n\n    style A fill:#e1f5fe\n    style B fill:#fff3e0\n    style C fill:#e8f5e9\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWarning\n\n\nUnfortunately, this simple view hides the complexity of what it really takes to deploy a model in production!\n\n\n\n\n\nAt its simplest, deployment is just this: input goes in, prediction comes out\nThe model becomes a service that other things can talk to\nRight now your models probably work like this: open notebook, load data, run cells, read output\nDeployment means wrapping that in something others can access without opening your notebook\nThe mechanism can be an API, a web app, a scheduled job — but the core idea is the same"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#what-production-actually-involves",
+    "href": "workshop/slides/deployment-prototyping.html#what-production-actually-involves",
+    "title": "From Model to Usable System",
+    "section": "What Production Actually Involves",
+    "text": "What Production Actually Involves\n\nModel Registry & Versioning — managing model updates without breaking things\nAPIs — endpoints that accept requests and return predictions\nUIs — user interfaces to allow stakeholders to interact with the model\nInfrastructure — servers, containers, scaling, uptime\nSecurity — authentication, data protection, access control\nMonitoring — tracking performance, detecting drift, alerting\nCI/CD — automated testing, deployment pipelines\nand sometimes far more!\n\n\n\nThis is the full picture of what “production deployment” looks like in industry\nAPIs are how most models get served: REST endpoints that accept JSON and return predictions\nInfrastructure means someone has to keep the servers running, handle load spikes, manage containers\nSecurity is critical: you can’t just expose a model to the internet without authentication\nMonitoring ensures the model keeps working correctly over time\nCI/CD automates the process of testing and deploying new model versions\nVersioning lets you update models safely (canary deployments, blue-green, shadow)"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#this-is-hard",
+    "href": "workshop/slides/deployment-prototyping.html#this-is-hard",
+    "title": "From Model to Usable System",
+    "section": "This Is Hard",
+    "text": "This Is Hard\n\n\nProduction deployment requires:\n\n\n\nEngineering teams and infrastructure support\nSignificant time investment\nOrganizational buy-in and resources\n\n\n\n\n\n\n\n\nReality Check\n\n\nMost data science teams don’t have this. Especially not for a class project.\n\n\n\n\n\nBe honest about this: real production deployment is a team sport\nIt involves DevOps engineers, platform teams, SREs\nIt takes weeks or months to set up properly\nMost companies are still figuring this out, let alone student projects\nSo what do we do? We don’t skip deployment entirely — we prototype\nThis is where the practical value of today’s workshop comes in"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#before-production-prototype",
+    "href": "workshop/slides/deployment-prototyping.html#before-production-prototype",
+    "title": "From Model to Usable System",
+    "section": "Before Production, Prototype",
+    "text": "Before Production, Prototype\n\n\nYou don’t need production infrastructure to make a model usable.\n\n\n\n\n\n\n\nflowchart LR\n    A[\"🧪 Notebook\"] --&gt; B[\"🔧 Prototype\"]\n    B --&gt; C[\"🏭 Production\"]\n\n    style A fill:#ffcdd2\n    style B fill:#c8e6c9\n    style C fill:#e1f5fe\n\n\n\n\n\n\n\n\nThis is the key shift in thinking: there’s a middle step between notebook and production\nA prototype is a working system that demonstrates your model is usable\nIt doesn’t need to scale to millions of users\nIt doesn’t need 99.99% uptime\nIt just needs to work well enough that someone can interact with it and get value\nThink of it as a proof of concept for the deployment, not the deployment itself"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#what-makes-a-usable-prototype",
+    "href": "workshop/slides/deployment-prototyping.html#what-makes-a-usable-prototype",
+    "title": "From Model to Usable System",
+    "section": "What Makes a Usable Prototype?",
+    "text": "What Makes a Usable Prototype?\n\n\nUser can provide input — forms, uploads, selections\nModel generates predictions — real-time or batch\nResults are understandable — clear output, context, interpretation\nIt actually runs — not just a notebook, but a working system\n\n\n\n\n\n\n\nNote\n\n\nNotice what’s NOT on this list: scalability, security, monitoring, CI/CD. Those matter for production. For a prototype, usability is what counts.\n\n\n\n\n\nA usable prototype has these four properties\nUser input: the stakeholder can control what goes into the model\nPredictions: the model actually runs and produces output\nUnderstandable: the results make sense to someone who isn’t a data scientist\nIt runs: you can start it up and someone can use it without your help\nNotice what’s NOT on this list: scalability, security, monitoring, CI/CD\nThose matter for production. For a prototype, usability is what counts."
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#the-prototype-stack",
+    "href": "workshop/slides/deployment-prototyping.html#the-prototype-stack",
+    "title": "From Model to Usable System",
+    "section": "The Prototype Stack",
+    "text": "The Prototype Stack\n\n\n\n\n\n\nflowchart LR\n    A[\"&lt;b&gt;FastAPI&lt;/b&gt;&lt;br/&gt;Model serving\"] --&gt; B[\"&lt;b&gt;Streamlit&lt;/b&gt;&lt;br/&gt;User interface\"]\n    C[\"&lt;b&gt;MLflow&lt;/b&gt;&lt;br/&gt;Model registry\"] --&gt; A\n\n    style A fill:#fff3e0\n    style B fill:#e8f5e9\n    style C fill:#e1f5fe\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nComponent\nRole\nWhy\n\n\n\n\nFastAPI\nServe predictions via API\nFast, Python-native, auto-docs\n\n\nStreamlit\nUser-facing interface\nNo frontend skills needed\n\n\nMLflow\nModel versioning & loading\nTrack and retrieve models\n\n\n\n\n\nThis is the stack we’ll use, and it’s the same stack used in the Rossmann project\nFastAPI: a Python web framework for building APIs. It’s fast, it auto-generates documentation, and it’s pure Python\nStreamlit: a Python library for building web UIs. You write Python, it generates a web app. No HTML, CSS, or JavaScript needed.\nMLflow: you’ve already seen this for experiment tracking. Here we use it to store and load trained models.\nThis stack is intentionally simple: all Python, minimal dependencies, runs locally\nIt’s also realistic: FastAPI is widely used in industry for model serving"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#models-degrade-over-time",
+    "href": "workshop/slides/deployment-prototyping.html#models-degrade-over-time",
+    "title": "From Model to Usable System",
+    "section": "Models Degrade Over Time",
+    "text": "Models Degrade Over Time\n\n\n[IMAGE: model performance degrading over time]\n\n\n\n\n\n\n\n\nModel Decay\n\n\nA model trained on historical data will become less accurate as the world changes.\n\n\n\n\n\nThis is a fundamental reality of deployed models\nThe world changes: customer behavior shifts, markets evolve, new patterns emerge\nYour model was trained on data from the past — it assumes the future looks similar\nWhen that assumption breaks, your model’s predictions get worse\nThis can happen gradually (seasonal shifts) or suddenly (COVID, policy changes)\nWithout monitoring, you won’t know this is happening until someone complains"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#what-changes",
+    "href": "workshop/slides/deployment-prototyping.html#what-changes",
+    "title": "From Model to Usable System",
+    "section": "What Changes?",
+    "text": "What Changes?\n\n\nData Drift\nThe inputs to your model change.\n\nFeature distributions shift\nNew categories appear\nValue ranges expand\n\nExample: Sales shift from in-store to online — the model wasn’t trained on that mix.\n\nConcept Drift\nThe relationship between inputs and outputs changes.\n\nSame features, different outcomes\nFeature importance shifts\nPatterns become stale\n\nExample: Promotion effectiveness changes after a competitor enters the market.\n\n\n\nTwo main types of drift to understand\nData drift: the inputs look different from what the model saw during training. Feature distributions shift. Think of it as the model receiving data it wasn’t prepared for.\nConcept drift: the inputs might look the same, but the relationship to the target has changed. The rules of the game changed.\nBoth degrade predictions, but they require different detection strategies\nData drift is easier to detect: you can compare current feature distributions to training data\nConcept drift is harder: you need ground truth labels to know if predictions are getting worse\nFor your prototypes, data drift detection is the most practical starting point"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#why-monitor",
+    "href": "workshop/slides/deployment-prototyping.html#why-monitor",
+    "title": "From Model to Usable System",
+    "section": "Why Monitor?",
+    "text": "Why Monitor?\n\nDetect problems early — before stakeholders notice\nBuild trust — show that you’re watching the model\nKnow when to retrain — data-driven, not guesswork\nAccountability — demonstrate the model is performing as expected\n\n\n\n\n\n\n\n\nFor Your Projects\n\n\nEven basic monitoring shows maturity and professionalism.\n\n\n\n\n\nMonitoring isn’t just a production concern — it demonstrates that you understand the model lifecycle\nEven in a prototype, having a simple drift report shows that you thought beyond “train and forget”\nIn job interviews, being able to talk about monitoring and drift will set you apart\nIt shows you understand that models are living things that need attention\nFor your final projects, even a simple Evidently report is a strong addition"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#prototype-architecture",
+    "href": "workshop/slides/deployment-prototyping.html#prototype-architecture",
+    "title": "From Model to Usable System",
+    "section": "Prototype Architecture",
+    "text": "Prototype Architecture\n\n\n\n\n\nflowchart LR\n    A[\"👤 User\"] --&gt; B[\"🖥️ Streamlit UI\"]\n    B --&gt;|\"API Request\"| C[\"⚡ FastAPI\"]\n    C --&gt;|\"Load Model\"| D[\"📦 MLflow Registry\"]\n    D --&gt; C\n    C --&gt;|\"Feature Engineering&lt;br/&gt;+ Prediction\"| E[\"🤖 Model\"]\n    E --&gt; C\n    C --&gt;|\"Log\"| F[\"📊 Prediction DB\"]\n    C --&gt;|\"Response\"| B\n    B --&gt;|\"Display\"| A\n\n    style A fill:#f3e5f5\n    style B fill:#e8f5e9\n    style C fill:#fff3e0\n    style D fill:#e1f5fe\n    style E fill:#fce4ec\n    style F fill:#f5f5f5\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLayer\nResponsibility\nUser Sees?\n\n\n\n\nStreamlit\nInput forms, result display, monitoring dashboards\nYes\n\n\nFastAPI\nFeature engineering, model serving, prediction logging\nNo\n\n\nMLflow\nModel storage, versioning, stage management\nNo\n\n\nSQLite\nPrediction history, drift detection data\nNo\n\n\n\n\n\nThe user sees the interface.  The system handles the complexity.\n\n\n\nHere’s how the pieces fit together in the Rossmann project\nThe user interacts with Streamlit — they fill in a form or upload a CSV\nStreamlit sends the input to FastAPI as an API request\nFastAPI loads the model from MLflow (cached after first load for speed)\nFastAPI runs the full feature engineering pipeline — the user provides 7 simple fields, the API engineers 46 features\nThe model generates predictions\nPredictions are logged to a SQLite database for monitoring\nResults are sent back to Streamlit and displayed to the user\nKey insight: the user never touches feature engineering, model loading, or any technical detail"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#separation-of-concerns",
+    "href": "workshop/slides/deployment-prototyping.html#separation-of-concerns",
+    "title": "From Model to Usable System",
+    "section": "Separation of Concerns",
+    "text": "Separation of Concerns\n\n\n\n\n\n\n\n\n\nLayer\nResponsibility\nUser Sees?\n\n\n\n\nStreamlit\nInput forms, result display, monitoring dashboards\nYes\n\n\nFastAPI\nFeature engineering, model serving, prediction logging\nNo\n\n\nMLflow\nModel storage, versioning, stage management\nNo\n\n\nSQLite\nPrediction history, drift detection data\nNo\n\n\n\n\n\nThe user sees the interface.  The system handles the complexity.\n\n\n\nThis separation is a fundamental design principle\nThe frontend (Streamlit) is what users interact with — it should be clean and intuitive\nThe backend (FastAPI) does all the heavy lifting — feature engineering, model inference, logging\nMLflow handles model lifecycle — which version is in production, which is being tested\nSQLite stores prediction history so we can detect drift later\nThe user doesn’t need to know any of this. They fill in a form and get a prediction.\nThis is the difference between a notebook and a system"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#the-rossmann-project",
+    "href": "workshop/slides/deployment-prototyping.html#the-rossmann-project",
+    "title": "From Model to Usable System",
+    "section": "The Rossmann Project",
+    "text": "The Rossmann Project\n\n\n\nSales forecasting for 1,115 Rossmann retail stores across Europe.\n\nTrained ensemble model (XGBoost, LightGBM, CatBoost)\n46 engineered features from 7 user inputs\nMLflow model registry with versioning\n\n\n\n\n\n\n\nflowchart TD\n    A[\"XGBoost&lt;br/&gt;60%\"] --&gt; D[\"Ensemble\"]\n    B[\"LightGBM&lt;br/&gt;30%\"] --&gt; D\n    C[\"CatBoost&lt;br/&gt;10%\"] --&gt; D\n    D --&gt; E[\"Prediction\"]\n\n    style A fill:#e1f5fe\n    style B fill:#e8f5e9\n    style C fill:#fff3e0\n    style D fill:#f3e5f5\n    style E fill:#fce4ec\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNext step:\n\n\nHow can we turn this into a prototype that a user could actually interact with, without needing to understand the underlying model or feature engineering?\n\n\n\n\n\nThis is the real project we’ll demo — Rossmann is a European drugstore chain\nThe model predicts daily sales for individual stores\nIt uses a weighted ensemble: XGBoost (60%), LightGBM (30%), CatBoost (10%)\nKey thing to notice: the user provides just 7 simple fields — store number, date, whether they’re open, promotion status, holidays\nThe API handles all 46 features behind the scenes: calendar features, lag features, rolling statistics, store metadata\nThis is the pattern you want to follow: simple inputs, complex processing hidden from the user"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#what-to-watch-for",
+    "href": "workshop/slides/deployment-prototyping.html#what-to-watch-for",
+    "title": "From Model to Usable System",
+    "section": "What to Watch For",
+    "text": "What to Watch For\n\nDuring the demo, pay attention to:\n\nHow simple the user inputs are — 7 fields, not 46\nHow the system handles complexity — feature engineering is automatic\nHow predictions are displayed — clear, contextual, interpretable\nHow the pieces communicate — Streamlit → FastAPI → Model → Response\n\n\n\nBefore we jump in, I want you to watch for these specific things\nThe simplicity of the inputs is intentional: a store manager could use this\nFeature engineering is fully automated in the API — the user never sees it\nThe predictions come back with context, not just a number\nWatch how Streamlit calls FastAPI and displays the results"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-system-status",
+    "href": "workshop/slides/deployment-prototyping.html#demo-system-status",
+    "title": "From Model to Usable System",
+    "section": "Demo: System Status",
+    "text": "Demo: System Status\n\n\n[IMAGE: Streamlit home page showing API status, model version, system health]\n\n\n\nAPI status: online/offline indicator\nModel loaded: production version info\nSystem health at a glance\n\n\n\nStart the demo here: the home page gives you a system overview\nYou can see immediately if the API is running and if a model is loaded\nIt shows which model version is in production and which is in staging\nThis is a nice pattern for any deployment: give users confidence that the system is working\nWalk through: “API is online, model version 7 is loaded in production, we’re ready to go”"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-single-prediction",
+    "href": "workshop/slides/deployment-prototyping.html#demo-single-prediction",
+    "title": "From Model to Usable System",
+    "section": "Demo: Single Prediction",
+    "text": "Demo: Single Prediction\n\n\n[IMAGE: Streamlit single prediction form with store selector, date picker, toggles]\n\n\nUser provides: Store, Date, Open, Promo, Holidays\nSystem returns: Predicted sales amount + context\n\n\nShow the single prediction tab\nFill in a store number, pick a date, set promotion status\nNotice: Day of Week is auto-calculated from the date — one less thing for the user to think about\nHit predict and show the result\nThe prediction comes back as a dollar amount with the store ID, date, and model version\nPoint out: the user provided 7 fields. The API engineered 46 features. The user didn’t have to think about any of that.\nThis is what “usable” looks like"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-batch-predictions",
+    "href": "workshop/slides/deployment-prototyping.html#demo-batch-predictions",
+    "title": "From Model to Usable System",
+    "section": "Demo: Batch Predictions",
+    "text": "Demo: Batch Predictions\n\n\n[IMAGE: Streamlit batch upload interface with CSV template and results table]\n\n\nUser uploads: CSV with store, date, and context columns\nSystem returns: Predictions for all rows + summary statistics + downloadable results\n\n\nNow show the batch tab\nDownload the template CSV — notice it has the same simple columns\nUpload a file with multiple stores and dates\nThe system processes all rows, auto-calculates day of week, engineers features, and generates predictions\nShow the results table and summary statistics\nPoint out the download button — stakeholders love being able to export results\nThis is the other common pattern: batch inference. Some use cases need one prediction, others need thousands."
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-fastapi-documentation",
+    "href": "workshop/slides/deployment-prototyping.html#demo-fastapi-documentation",
+    "title": "From Model to Usable System",
+    "section": "Demo: FastAPI Documentation",
+    "text": "Demo: FastAPI Documentation\n\n\n[IMAGE: FastAPI Swagger UI showing /predict endpoint, request/response schemas]\n\n\nFastAPI auto-generates interactive API docs at /docs\n\nTry endpoints directly in the browser\nSee request/response schemas\nCopy curl commands for integration\n\n\n\nSwitch to the browser and go to localhost:8000/docs\nFastAPI automatically generates this Swagger UI — you get it for free\nShow the /predict endpoint: click “Try it out”, paste in a sample request, execute\nShow the response with the prediction\nThis is one of the best features of FastAPI: instant, interactive API documentation\nFor your projects, this means anyone integrating with your model can see exactly how to call it\nNo separate documentation needed"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-monitoring",
+    "href": "workshop/slides/deployment-prototyping.html#demo-monitoring",
+    "title": "From Model to Usable System",
+    "section": "Demo: Monitoring",
+    "text": "Demo: Monitoring\n\n\n[IMAGE: Streamlit monitoring page with usage charts and drift detection results]\n\n\n\nPrediction volume over time\nData drift detection (Evidently)\nFeature distribution comparisons\n\n\n\nSwitch to the monitoring page in Streamlit\nShow prediction usage statistics: how many predictions have been made, when, which model version\nGenerate a drift report: this compares the features in recent predictions against the training data\nShow the drift results: which features are drifting, how much, distribution comparisons\nExplain: if drift is detected, it’s a signal that the model may need retraining\nFor your projects, even a basic version of this shows real sophistication\nEvidently makes this relatively easy to add"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#your-project",
+    "href": "workshop/slides/deployment-prototyping.html#your-project",
+    "title": "From Model to Usable System",
+    "section": "Your Project",
+    "text": "Your Project\n\nThink about your own project:\n\n\nWhat are the inputs to your model?\nWhat does the output look like?\nWho is the user? What do they need the output to be?\nWhat would a simple interface look like?\nWhat do you envision the tech stack to look like?\n\n\n\n\n\nProject Planning\n\n\nLet’s spend ~15min working in your group to discuss these questions and outline what a prototype might look like.\n\n\n\n\n\nTake a minute to think about this for your own project\nInputs: what does someone need to provide to get a prediction? Can you simplify it?\nOutputs: is it a number? A category? A ranking? How do you make it meaningful?\nUser: is it a business stakeholder? An analyst? A manager? What do they care about?\nInterface: could you build a simple Streamlit app with a form and a results display?\nDrift: what in your data might change over time? Distributions? Relationships? Categories?\nYou don’t need to answer all of these perfectly — but thinking about them now will save you time later"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#mapping-to-your-stack",
+    "href": "workshop/slides/deployment-prototyping.html#mapping-to-your-stack",
+    "title": "From Model to Usable System",
+    "section": "Mapping to Your Stack",
+    "text": "Mapping to Your Stack\n\n\n\n\n\n\nflowchart LR\n    A[\"&lt;b&gt;Your Model&lt;/b&gt;&lt;br/&gt;(trained & tracked&lt;br/&gt;in MLflow)\"] --&gt; B[\"&lt;b&gt;FastAPI&lt;/b&gt;&lt;br/&gt;Serve predictions&lt;br/&gt;via API endpoint\"]\n    B --&gt; C[\"&lt;b&gt;Streamlit&lt;/b&gt;&lt;br/&gt;User interface&lt;br/&gt;for interaction\"]\n    C --&gt; D[\"&lt;b&gt;(Optional)&lt;/b&gt;&lt;br/&gt;Monitoring&lt;br/&gt;& drift detection\"]\n\n    style A fill:#e1f5fe\n    style B fill:#fff3e0\n    style C fill:#e8f5e9\n    style D fill:#f5f5f5\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYour Component\nWhat It Does\nRossmann Equivalent\n\n\n\n\nFastAPI app\nLoads model, accepts input, returns predictions\ndeployment/api/main.py\n\n\nStreamlit app\nUser fills form or uploads data, sees results\ndeployment/streamlit/Home.py\n\n\nMonitoring\nLogs predictions, detects drift\npages/3_📊_Monitoring.py\n\n\n\n\n\nHere’s how to map what you saw today to your own project\nYour model is already tracked in MLflow from the experimentation workshop\nFastAPI wraps your model: it loads from MLflow, accepts inputs, runs feature engineering, returns predictions\nStreamlit gives users a way to interact: forms for inputs, tables and charts for outputs\nMonitoring is optional but impressive: log predictions and check for drift\nThe Rossmann project can serve as your template — the structure is the same regardless of what model you’re serving\nYou don’t need to build it exactly the same way, but this architecture works well for most projects"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#what-is-an-mvp",
+    "href": "workshop/slides/deployment-prototyping.html#what-is-an-mvp",
+    "title": "From Model to Usable System",
+    "section": "What Is an MVP?",
+    "text": "What Is an MVP?\n\n\n\nMVP is NOT\n\nPerfect\nScalable\nFully tested\nProduction-ready\nBeautiful\n\n\nMVP IS\n\nProgress shown — components are working\nFunctional — core pieces operational\nDemo-able — you can show what you’ve built\nClear vision — you know where you’re going\n\n\n\n\n\n\n\n\n\nMinimum Viable Product\n\n\nThe smallest thing you can build that demonstrates progress towards your ML system.\n\n\n\n\n\nMVP stands for Minimum Viable Product\nThe emphasis is on “minimum” and “viable” — not “perfect” or even fully integrated\nIt’s NOT about building a complete system. It’s about showing meaningful progress.\nDo you have working components? Can you demo a data pipeline? Can you show model training and tracking?\nComponents don’t need to be fully connected yet - that’s okay\nFor this MVP, showing progress and having a clear plan is more important than a polished end-to-end system\nYou might have a data pipeline working separately from model training - that’s fine\nYou might be tracking experiments but don’t have a UI yet - that’s totally acceptable\nThe key is: can you demo what you’ve built AND explain what comes next?"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#your-mvp-system",
+    "href": "workshop/slides/deployment-prototyping.html#your-mvp-system",
+    "title": "From Model to Usable System",
+    "section": "Your MVP System",
+    "text": "Your MVP System\n\n\n\n\n\n\n\nMinimum Components\n\n\n\nA trained model tracked in MLflow\nA FastAPI endpoint that serves predictions\nA Streamlit interface that lets users interact\n\n\n\n\n\n\n\n\n\n\n\nBonus Components\n\n\n\nPrediction logging\nDrift detection report\nBatch prediction support\nModel version comparison\n\n\n\n\n\n\nHere’s what your MVP should include at minimum\nA trained model in MLflow: you should already have this from the experimentation workshop\nA FastAPI endpoint: one endpoint that accepts input and returns a prediction\nA Streamlit interface: a simple page with a form and results display\nThat’s it. That’s the MVP.\nThe bonus components are great additions if you have time, but they’re not required\nPrediction logging is relatively easy to add and enables monitoring later\nDrift detection with Evidently is a nice touch but not essential for the MVP\nFocus on getting the core three working first"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#getting-started",
+    "href": "workshop/slides/deployment-prototyping.html#getting-started",
+    "title": "From Model to Usable System",
+    "section": "Getting Started",
+    "text": "Getting Started\n\n📂 your-project/\n├── 📂 deployment/\n│   ├── 📂 api/\n│   │   └── 📄 main.py           # FastAPI app\n│   └── 📂 streamlit/\n│       └── 📄 Home.py           # Streamlit UI\n├── 📂 src/                       # Your existing code\n├── 📂 mlruns/                    # MLflow tracking\n└── 📄 requirements.txt\n\n\nStart with the API. Then build the UI.  Get predictions flowing, then make it look good.\n\n\n\nHere’s a suggested project structure\nAdd a deployment folder to your existing project\nStart with the FastAPI app: can you load your model and return a prediction?\nThen build the Streamlit interface: can a user provide input and see results?\nDon’t worry about the monitoring piece until the core flow works\nThe Rossmann project is a good reference — look at how the files are structured\nYou can run both locally: FastAPI on port 8000, Streamlit on port 8501\nTest the API first using the auto-generated docs at /docs, then connect Streamlit"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#final-project-mvp-1",
+    "href": "workshop/slides/deployment-prototyping.html#final-project-mvp-1",
+    "title": "From Model to Usable System",
+    "section": "Final Project MVP",
+    "text": "Final Project MVP\n\n\n[TO BE FILLED]\n\n\n\nAssignment details will be filled in here\nKey deliverables and timeline will be added"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#key-takeaways",
+    "href": "workshop/slides/deployment-prototyping.html#key-takeaways",
+    "title": "From Model to Usable System",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\n\nModels create value when they’re used, not when they’re trained\nDeployment means making models accessible and interactive, not just production-ready\nYou don’t need production infrastructure to build usable prototypes\nREST APIs provide a standard way to interact with models programmatically\nFastAPI + Streamlit + MLflow is a practical, Python-native prototype stack\nFor your MVP: show progress, demo what works, and have a clear vision\n\n\n\nLet’s recap the key ideas from today\nValue comes from use - experiments and registered models don’t create value until someone can interact with them\nDeployment isn’t about production infrastructure - it’s about making models accessible\nYou can build functional prototypes without complex infrastructure\nREST APIs are the industry standard for making models accessible programmatically\nFastAPI + Streamlit + MLflow are tools you can learn quickly and use in industry\nMVP thinking for your project: you don’t need everything fully integrated - show working components and a clear plan\nFor your final projects, demonstrating progress on real components is more valuable than a perfect plan"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#resources",
+    "href": "workshop/slides/deployment-prototyping.html#resources",
+    "title": "From Model to Usable System",
+    "section": "Resources",
+    "text": "Resources\n\n\n\n\nResource\nLink\n\n\n\n\nFastAPI docs\nfastapi.tiangolo.com\n\n\nStreamlit docs\ndocs.streamlit.io\n\n\nMLflow docs\nmlflow.org\n\n\nRossmann project\ngithub.com/bradleyboehmke/rossmann-forecasting\n\n\nWorkshop materials\nSee course repository\n\n\n\n\n\nHere are the key resources to help you get started\nFastAPI documentation is excellent - the tutorial section walks you through building an API step by step\nStreamlit has great docs and a gallery of example apps you can learn from\nMLflow docs cover model serving and the registry - particularly useful for loading models in your API\nThe Rossmann project is a complete reference implementation showing all these pieces working together\nWorkshop materials including slides and code examples are in the course repository\nRemember: these tools have tons of examples online, so AI assistants like ChatGPT and Claude are very effective for getting started"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#abstracting-technical-complexity",
+    "href": "workshop/slides/deployment-prototyping.html#abstracting-technical-complexity",
+    "title": "From Model to Usable System",
+    "section": "Abstracting Technical Complexity",
+    "text": "Abstracting Technical Complexity\n\n\n\n\n\n\n\nRemember Your Users\n\n\nYour ML system will be used by stakeholders who:\n\nMay lack technical ML knowledge\nDon’t have time to provide 50+ detailed inputs\nCan’t interpret raw model outputs\n\n\n\n\n\n\nOur system must hide the technical nuances.\n\n\n\nThis is a critical design principle: your users are not data scientists\nThey may be store managers, business analysts, marketing directors\nThey don’t know what a lag feature is or why you need rolling statistics\nThey don’t have time to manually fill in 46 feature values\nAnd they can’t interpret a raw prediction without context\nOur job is to abstract away the complexity: simple inputs, clear outputs\nThe system handles feature engineering, model loading, prediction formatting behind the scenes\nDISCUSSION OPPORTUNITY: Have each group spend 2-3 minutes thinking about:\n\nWho are your end users?\nWhat technical nuances need to be hidden from them?\nWhat are the minimum inputs you need from them?\nWhat outputs do they actually care about?"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#production-ml-system-architecture",
+    "href": "workshop/slides/deployment-prototyping.html#production-ml-system-architecture",
+    "title": "From Model to Usable System",
+    "section": "Production ML System Architecture",
+    "text": "Production ML System Architecture\n\n\n\n\n\nflowchart LR\n    User[\"👤 &lt;b&gt;User&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Stakeholder, Analyst,&lt;br/&gt;Business User&lt;/i&gt;\"]\n\n    subgraph UI[\"User Interface Layer\"]\n        Web[\"Web UI&lt;br/&gt;&lt;i&gt;Streamlit, Gradio, React&lt;/i&gt;\"]\n        Mobile[\"Mobile Apps&lt;br/&gt;&lt;i&gt;iOS, Android&lt;/i&gt;\"]\n    end\n\n    subgraph API[\"API Layer\"]\n        Gateway[\"API Gateway&lt;br/&gt;&lt;i&gt;Kong, AWS API Gateway&lt;/i&gt;\"]\n        Auth[\"Authentication&lt;br/&gt;&lt;i&gt;OAuth2, JWT&lt;/i&gt;\"]\n    end\n\n    subgraph Serving[\"Model Serving\"]\n        FastAPI[\"FastAPI/Flask\"]\n        ModelServer[\"Model Server&lt;br/&gt;&lt;i&gt;TensorFlow Serving, Triton&lt;/i&gt;\"]\n    end\n\n    subgraph Registry[\"Model Registry & Versioning\"]\n        MLflow[\"MLflow Registry\"]\n        Storage[\"Model Storage&lt;br/&gt;&lt;i&gt;S3, GCS, Azure Blob&lt;/i&gt;\"]\n    end\n\n    subgraph Infra[\"Infrastructure\"]\n        Container[\"Containers&lt;br/&gt;&lt;i&gt;Docker&lt;/i&gt;\"]\n        Orchestration[\"Orchestration&lt;br/&gt;&lt;i&gt;Kubernetes, ECS&lt;/i&gt;\"]\n        LoadBalancer[\"Load Balancer&lt;br/&gt;&lt;i&gt;NGINX, AWS ALB&lt;/i&gt;\"]\n    end\n\n    subgraph Monitor[\"Monitoring & Logging\"]\n        Metrics[\"Metrics&lt;br/&gt;&lt;i&gt;Prometheus, CloudWatch&lt;/i&gt;\"]\n        Drift[\"Drift Detection&lt;br/&gt;&lt;i&gt;Evidently, WhyLabs&lt;/i&gt;\"]\n        Logs[\"Logging&lt;br/&gt;&lt;i&gt;ELK Stack, Splunk&lt;/i&gt;\"]\n    end\n\n    subgraph CICD[\"CI/CD Pipeline\"]\n        Test[\"Testing&lt;br/&gt;&lt;i&gt;Pytest, Great Expectations&lt;/i&gt;\"]\n        Deploy[\"Deployment&lt;br/&gt;&lt;i&gt;GitHub Actions, Jenkins&lt;/i&gt;\"]\n        Version[\"Version Control&lt;br/&gt;&lt;i&gt;Git, DVC&lt;/i&gt;\"]\n    end\n\n    User --&gt; Web\n    User --&gt; Mobile\n    Web --&gt; Gateway\n    Mobile --&gt; Gateway\n    Gateway --&gt; Auth\n    Auth --&gt; FastAPI\n    FastAPI --&gt; ModelServer\n    ModelServer --&gt; MLflow\n    MLflow --&gt; Storage\n\n    FastAPI --&gt; Container\n    Container --&gt; Orchestration\n    Orchestration --&gt; LoadBalancer\n\n    FastAPI --&gt; Metrics\n    FastAPI --&gt; Drift\n    FastAPI --&gt; Logs\n\n    Version --&gt; Test\n    Test --&gt; Deploy\n    Deploy --&gt; Container\n\n    style User fill:#ffebee,stroke:#c62828,stroke-width:3px\n    style UI fill:#e1f5fe\n    style API fill:#f3e5f5\n    style Serving fill:#fff3e0\n    style Registry fill:#e8f5e9\n    style Infra fill:#fce4ec\n    style Monitor fill:#fff9c4\n    style CICD fill:#f0f4c3\n\n\n\n\n\n\n\n\nThis diagram shows the complexity of a real production ML system\nNotice the User on the left: the stakeholder, analyst, or business user who needs predictions\nThe user only interacts with the User Interface layer - they’re shielded from all the complexity to the right\nEach box represents a major component with production-grade tools\nNotice how many moving parts there are compared to the simple notebook workflow\nUser Interface layer: web apps, mobile apps for stakeholder interaction\nAPI layer: gateway for routing, authentication for security\nModel serving: FastAPI or specialized model servers for predictions\nRegistry: MLflow for versioning, cloud storage for model artifacts\nInfrastructure: containers, orchestration (Kubernetes), load balancing\nMonitoring: metrics tracking, drift detection, centralized logging\nCI/CD: automated testing, deployment pipelines, version control\nAll of these components need to work together seamlessly\nThis is why we say production deployment is hard and requires engineering support"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#but-we-can-start-somewhere",
+    "href": "workshop/slides/deployment-prototyping.html#but-we-can-start-somewhere",
+    "title": "From Model to Usable System",
+    "section": "But We Can Start Somewhere",
+    "text": "But We Can Start Somewhere\n\n\nWe may not build the entire production system…  But we can build working prototypes.\n\n\n\nTurn a model into a usable system that demonstrates what production could look like\nUse tools and patterns that naturally migrate to production when the time comes\n\n\n\nHere’s the key insight: you don’t need to wait for full production infrastructure to make progress\nWe can build working prototypes that demonstrate the value of our models\nThese prototypes turn a model into something usable - something stakeholders can interact with\nThey show what a production system could look like without requiring the full complexity\nAnd critically, we’ll use tools and patterns that are production-ready\nFastAPI, Streamlit, MLflow - these aren’t toy tools, they’re used in real production systems\nWhen you do get engineering support, your prototype becomes the foundation, not throwaway code\nThis is a practical middle ground: make your model usable now, build toward production later"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#you-dont-need-production-infrastructure",
+    "href": "workshop/slides/deployment-prototyping.html#you-dont-need-production-infrastructure",
+    "title": "From Model to Usable System",
+    "section": "You Don’t Need Production Infrastructure",
+    "text": "You Don’t Need Production Infrastructure\n\n\nA prototype simplifies the architecture.  But when done smartly, it doesn’t add tech debt.\n\n\n\n\n\n\n\n\nflowchart LR\n    A[\"🧪 Models\"] --&gt; B[\"🔧 Prototype System\"]\n    B --&gt; C[\"🏭 Production\"]\n\n    style A fill:#ffcdd2\n    style B fill:#4caf50,stroke:#2e7d32,stroke-width:4px\n    style C fill:#e1f5fe\n\n\n\n\n\n\n\n\n\nYou don’t need production infrastructure to make a model usable\nA prototype simplifies the architecture - fewer components, less complexity\nBut here’s the key: when done smartly, it doesn’t create tech debt\nHow? By using production-ready tools and patterns from the start\nFastAPI, Streamlit, MLflow - these are the same tools you’d use in production\nYou’re not building throwaway code, you’re building a foundation\nWhen engineering support arrives, you extend the prototype, you don’t rewrite it\nThis is strategic prototyping: start simple, but start right"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#a-common-prototype-stack",
+    "href": "workshop/slides/deployment-prototyping.html#a-common-prototype-stack",
+    "title": "From Model to Usable System",
+    "section": "A Common Prototype Stack",
+    "text": "A Common Prototype Stack\n\n\n\n\n\n\nflowchart LR\n    User[\"👤 &lt;b&gt;User&lt;/b&gt;\"] --&gt; A[\"&lt;b&gt;Streamlit&lt;/b&gt;&lt;br/&gt;User interface\"]\n    A --&gt; B[\"&lt;b&gt;FastAPI&lt;/b&gt;&lt;br/&gt;Model serving\"]\n    B --&gt; C[\"&lt;b&gt;MLflow&lt;/b&gt;&lt;br/&gt;Model registry\"]\n\n    style User fill:#ffebee,stroke:#c62828,stroke-width:3px\n    style A fill:#e8f5e9\n    style B fill:#fff3e0\n    style C fill:#e1f5fe\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nComponent\nRole\nWhy\n\n\n\n\nStreamlit\nUser-facing interface\nNo frontend skills needed\n\n\nFastAPI\nServe predictions via API\nFast, Python-native, auto-docs\n\n\nMLflow\nModel versioning & loading\nTrack and retrieve models\n\n\n\n\n\nThis is a common stack we’ll use, and it’s the same stack used in the Rossmann project\nNotice the User on the left - they interact with Streamlit, not the technical components\nMLflow: you’ve already seen this for experiment tracking. Here we use it to store and load trained models.\nFastAPI: a Python web framework for building APIs. It’s fast, it auto-generates documentation, and it’s pure Python\nStreamlit: a Python library for building web UIs. You write Python, it generates a web app. No HTML, CSS, or JavaScript needed.\nThis stack is intentionally simple: all Python, minimal dependencies, runs locally\nIt’s also realistic: FastAPI is widely used in industry for model serving\nThe user only sees Streamlit - the complexity is hidden behind the interface"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#prototype-architecture-1",
+    "href": "workshop/slides/deployment-prototyping.html#prototype-architecture-1",
+    "title": "From Model to Usable System",
+    "section": "Prototype Architecture",
+    "text": "Prototype Architecture\n\n\n\n\n\nflowchart LR\n    A[\"👤 User\"] --&gt; B[\"🖥️ Streamlit UI\"]\n    B --&gt;|\"API Request\"| C[\"⚡ FastAPI\"]\n    C --&gt;|\"Load Model\"| D[\"📦 MLflow Registry\"]\n    D --&gt; C\n    C --&gt;|\"Feature Engineering&lt;br/&gt;+ Prediction\"| E[\"🤖 Model\"]\n    E --&gt; C\n    C --&gt;|\"Log\"| F[\"📊 Prediction DB\"]\n    C --&gt;|\"Response\"| B\n    B --&gt;|\"Display\"| A\n\n    style A fill:#f3e5f5\n    style B fill:#e8f5e9\n    style C fill:#fff3e0\n    style D fill:#e1f5fe\n    style E fill:#fce4ec\n    style F fill:#f5f5f5\n\n\n\n\n\n\n\n\nHere’s how the pieces fit together in the Rossmann project\nThe user interacts with Streamlit — they fill in a form or upload a CSV\nStreamlit sends the input to FastAPI as an API request\nFastAPI loads the model from MLflow (cached after first load for speed)\nFastAPI runs the full feature engineering pipeline — the user provides 7 simple fields, the API engineers 46 features\nThe model generates predictions\nPredictions are logged to a SQLite database for monitoring\nResults are sent back to Streamlit and displayed to the user\nKey insight: the user never touches feature engineering, model loading, or any technical detail"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#separation-of-concerns-1",
+    "href": "workshop/slides/deployment-prototyping.html#separation-of-concerns-1",
+    "title": "From Model to Usable System",
+    "section": "Separation of Concerns",
+    "text": "Separation of Concerns\n\n\n\n\n\n\n\n\n\nLayer\nResponsibility\nUser Sees?\n\n\n\n\nStreamlit\nInput forms, result display, monitoring dashboards\nYes\n\n\nFastAPI\nFeature engineering, model serving, prediction logging\nNo\n\n\nMLflow\nModel storage, versioning, stage management\nNo\n\n\nSQLite\nPrediction history, drift detection data\nNo\n\n\n\n\n\nThe user sees the interface.  The system handles the complexity.\n\n\n\nThis separation is a fundamental design principle\nThe frontend (Streamlit) is what users interact with — it should be clean and intuitive\nThe backend (FastAPI) does all the heavy lifting — feature engineering, model inference, logging\nMLflow handles model lifecycle — which version is in production, which is being tested\nSQLite stores prediction history so we can detect drift later\nThe user doesn’t need to know any of this. They fill in a form and get a prediction.\nThis is the difference between a notebook and a system"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#the-rossmann-project-1",
+    "href": "workshop/slides/deployment-prototyping.html#the-rossmann-project-1",
+    "title": "From Model to Usable System",
+    "section": "The Rossmann Project",
+    "text": "The Rossmann Project\n\n\n\nSales forecasting for 1,115 Rossmann retail stores across Europe.\n\nTrained ensemble model (XGBoost, LightGBM, CatBoost)\n46 engineered features from 7 user inputs\nMLflow model registry with versioning\nFastAPI backend + Streamlit frontend\nBuilt-in prediction logging and drift detection\n\n\n\n\n\n\n\nflowchart TD\n    A[\"XGBoost&lt;br/&gt;60%\"] --&gt; D[\"Ensemble\"]\n    B[\"LightGBM&lt;br/&gt;30%\"] --&gt; D\n    C[\"CatBoost&lt;br/&gt;10%\"] --&gt; D\n    D --&gt; E[\"Prediction\"]\n\n    style A fill:#e1f5fe\n    style B fill:#e8f5e9\n    style C fill:#fff3e0\n    style D fill:#f3e5f5\n    style E fill:#fce4ec\n\n\n\n\n\n\n\n\n\nThis is the real project we’ll demo — Rossmann is a European drugstore chain\nThe model predicts daily sales for individual stores\nIt uses a weighted ensemble: XGBoost (60%), LightGBM (30%), CatBoost (10%)\nKey thing to notice: the user provides just 7 simple fields — store number, date, whether they’re open, promotion status, holidays\nThe API handles all 46 features behind the scenes: calendar features, lag features, rolling statistics, store metadata\nThis is the pattern you want to follow: simple inputs, complex processing hidden from the user"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#what-to-watch-for-1",
+    "href": "workshop/slides/deployment-prototyping.html#what-to-watch-for-1",
+    "title": "From Model to Usable System",
+    "section": "What to Watch For",
+    "text": "What to Watch For\n\nDuring the demo, pay attention to:\n\nHow simple the user inputs are — 7 fields, not 46\nHow the system handles complexity — feature engineering is automatic\nHow predictions are displayed — clear, contextual, interpretable\nHow the pieces communicate — Streamlit → FastAPI → Model → Response\nHow monitoring works — predictions logged, drift detected\n\n\n\nBefore we jump in, I want you to watch for these specific things\nThe simplicity of the inputs is intentional: a store manager could use this\nFeature engineering is fully automated in the API — the user never sees it\nThe predictions come back with context, not just a number\nWatch how Streamlit calls FastAPI and displays the results\nAnd notice that monitoring is built in — every prediction is logged"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-system-status-1",
+    "href": "workshop/slides/deployment-prototyping.html#demo-system-status-1",
+    "title": "From Model to Usable System",
+    "section": "Demo: System Status",
+    "text": "Demo: System Status\n\n\n[IMAGE: Streamlit home page showing API status, model version, system health]\n\n\n\nAPI status: online/offline indicator\nModel loaded: production version info\nSystem health at a glance\n\n\n\nStart the demo here: the home page gives you a system overview\nYou can see immediately if the API is running and if a model is loaded\nIt shows which model version is in production and which is in staging\nThis is a nice pattern for any deployment: give users confidence that the system is working\nWalk through: “API is online, model version 7 is loaded in production, we’re ready to go”"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-single-prediction-1",
+    "href": "workshop/slides/deployment-prototyping.html#demo-single-prediction-1",
+    "title": "From Model to Usable System",
+    "section": "Demo: Single Prediction",
+    "text": "Demo: Single Prediction\n\n\n[IMAGE: Streamlit single prediction form with store selector, date picker, toggles]\n\n\nUser provides: Store, Date, Open, Promo, Holidays\nSystem returns: Predicted sales amount + context\n\n\nShow the single prediction tab\nFill in a store number, pick a date, set promotion status\nNotice: Day of Week is auto-calculated from the date — one less thing for the user to think about\nHit predict and show the result\nThe prediction comes back as a dollar amount with the store ID, date, and model version\nPoint out: the user provided 7 fields. The API engineered 46 features. The user didn’t have to think about any of that.\nThis is what “usable” looks like"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-batch-predictions-1",
+    "href": "workshop/slides/deployment-prototyping.html#demo-batch-predictions-1",
+    "title": "From Model to Usable System",
+    "section": "Demo: Batch Predictions",
+    "text": "Demo: Batch Predictions\n\n\n[IMAGE: Streamlit batch upload interface with CSV template and results table]\n\n\nUser uploads: CSV with store, date, and context columns\nSystem returns: Predictions for all rows + summary statistics + downloadable results\n\n\nNow show the batch tab\nDownload the template CSV — notice it has the same simple columns\nUpload a file with multiple stores and dates\nThe system processes all rows, auto-calculates day of week, engineers features, and generates predictions\nShow the results table and summary statistics\nPoint out the download button — stakeholders love being able to export results\nThis is the other common pattern: batch inference. Some use cases need one prediction, others need thousands."
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-fastapi-documentation-1",
+    "href": "workshop/slides/deployment-prototyping.html#demo-fastapi-documentation-1",
+    "title": "From Model to Usable System",
+    "section": "Demo: FastAPI Documentation",
+    "text": "Demo: FastAPI Documentation\n\n\n[IMAGE: FastAPI Swagger UI showing /predict endpoint, request/response schemas]\n\n\nFastAPI auto-generates interactive API docs at /docs\n\nTry endpoints directly in the browser\nSee request/response schemas\nCopy curl commands for integration\n\n\n\nSwitch to the browser and go to localhost:8000/docs\nFastAPI automatically generates this Swagger UI — you get it for free\nShow the /predict endpoint: click “Try it out”, paste in a sample request, execute\nShow the response with the prediction\nThis is one of the best features of FastAPI: instant, interactive API documentation\nFor your projects, this means anyone integrating with your model can see exactly how to call it\nNo separate documentation needed"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#from-architecture-to-code",
+    "href": "workshop/slides/deployment-prototyping.html#from-architecture-to-code",
+    "title": "From Model to Usable System",
+    "section": "From Architecture to Code",
+    "text": "From Architecture to Code\n\n\nSystem Architecture:\n\n\n\n\n\nflowchart TB\n    subgraph Registry[\"MLflow Model Registry (Port 5000)\"]\n        MR[(Model Storage)]\n        MV[Version Management]\n        MS[Stage Tracking]\n    end\n\n    subgraph API[\"FastAPI Service (Port 8000)\"]\n        direction TB\n        ML[Model Loader]\n        PP[Prediction Pipeline]\n        FE[Feature Engineering]\n        VAL[Input Validation]\n    end\n\n    subgraph UI[\"Streamlit Dashboard (Port 8501)\"]\n        direction TB\n        SP[Single Prediction]\n        BP[Batch Upload]\n        VIZ[Results Display]\n    end\n\n    subgraph User[\"End Users\"]\n        \n    end\n\n    User --&gt; UI\n    UI --&gt;|HTTP POST| API\n    API --&gt;|Load Model| Registry\n    Registry --&gt;|Ensemble Model| API\n    API --&gt;|Predictions| UI\n    UI --&gt;|Results| User\n\n    style Registry fill:#e1f5ff\n    style API fill:#fff4e1\n    style UI fill:#f0f0f0\n    style User fill:#e8f5e9\n\n\n\n\n\n\n\nFile Structure:\nrossmann-forecasting/\n├── deployment/\n│   ├── api/\n│   │   └── main.py          ← FastAPI app\n│   └── streamlit/\n│       ├── Home.py          ← Main UI\n│       └── pages/           ← Individual UI pages\n│           ├── 1_📊_Predictions.py\n│           └── 2_📈_Monitoring.py\n├── mlruns/                  ← MLflow tracking\n│   └── models/              ← Model artifacts\n│ \n└── src/                     ← Source code\n\n\n\n\n\n\n\nNote\n\n\nFastAPI will use scripts from the src/ directory for input validation, feature engineering, making predictions, etc.\n\n\n\n\n\nThis slide connects the conceptual architecture to the actual code\nLeft side: the simple architecture we’ve been discussing\nRight side: where these components actually live in the Rossmann project\nFastAPI app: deployment/api/main.py - this is the prediction API\nFeature engineering: deployment/api/features.py - handles all 46 features\nStreamlit UI: deployment/streamlit/ - the user interface with multiple pages\nMLflow: mlruns/ directory stores experiment tracking and model registry data\nModels: models/ directory contains saved model artifacts\nThis is a clean, organized structure you can replicate in your own projects\nNotice the separation: API code is separate from UI code, making it easy to maintain"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#mlflow-fastapi-making-models-accessible",
+    "href": "workshop/slides/deployment-prototyping.html#mlflow-fastapi-making-models-accessible",
+    "title": "From Model to Usable System",
+    "section": "MLflow + FastAPI: Making Models Accessible",
+    "text": "MLflow + FastAPI: Making Models Accessible\n\n\n\nLast class: MLflow\n\nManages experiments and runs\nRegisters models\nVersions model artifacts\nTracks model stages (staging/production)\n\n\nToday: FastAPI\n\nProvides programmatic access to models\nAuto-generated API documentation\nFast, Python-native framework\nInput validation & type checking\n\n\n\n\n\n\n\n\n\nThe limitation:\n\n\nFastAPI is not a user interface. It’s designed for developers, not stakeholders.\n\n\n\n\n\nLast class we saw how MLflow helps us track experiments, register models, and manage versions\nMLflow gives us a registry - a place to store and version our models\nBut MLflow alone doesn’t let stakeholders interact with the model\nThat’s where FastAPI comes in: it provides an API layer that can load models and serve predictions\nBenefits: FastAPI auto-generates interactive docs at /docs, it’s fast, it’s Python-native so we don’t need to learn new languages, it validates inputs automatically\nThe problem: FastAPI’s interface is very technical - it’s meant for developers making API calls, not for business users\nDemo plan: I’ll launch MLflow UI to show the model registry, then launch FastAPI and show the /docs endpoint, then make a prediction through the API\nThis will demonstrate that while we CAN interact with the model now, it’s not user-friendly for stakeholders\nThis limitation is exactly why we need Streamlit - to create an interface that non-technical users can actually use"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#making-models-accessible-rest-apis",
+    "href": "workshop/slides/deployment-prototyping.html#making-models-accessible-rest-apis",
+    "title": "From Model to Usable System",
+    "section": "Making Models Accessible: REST APIs",
+    "text": "Making Models Accessible: REST APIs\n\n\nLast class: MLflow manages and versions our models  This class: We need a way to interact with those models\n\n\n\n\n\n\n\n\nREST API (Application Programming Interface)\n\n\nA standardized way to send requests and receive responses over HTTP.\n\nSend input data → Get predictions back\nLanguage-agnostic (works with Python, R, JavaScript, etc.)\nIndustry standard for model serving\n\n\n\n\n\n\nLast class we saw how MLflow tracks experiments, registers models, and manages versions\nMLflow gives us a registry - a central place where our models live\nBut MLflow alone doesn’t let us actually USE the model - we need a way to send data and get predictions\nThat’s where REST APIs come in - they’re a standardized way to interact with services over the web\nThink of an API as a waiter at a restaurant: you give the waiter your order (input), they take it to the kitchen (model), and bring back your food (prediction)\nREST APIs use HTTP - the same protocol your browser uses - so they’re language-agnostic\nYou can call a Python API from R, JavaScript, curl, anything that speaks HTTP\nThis is the industry standard for serving models - whether you’re at a startup or Google, you’re likely using REST APIs"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#fastapi-building-rest-apis-in-python",
+    "href": "workshop/slides/deployment-prototyping.html#fastapi-building-rest-apis-in-python",
+    "title": "From Model to Usable System",
+    "section": "FastAPI: Building REST APIs in Python",
+    "text": "FastAPI: Building REST APIs in Python\n\n\n\nWhy FastAPI?\n\nPython-native (no new languages)\nAuto-generated documentation\nBuilt-in input validation\nFast and production-ready\n\n\nWhat it provides:\n\n/predict endpoint for predictions\n/health endpoint for status checks\n/docs interactive API explorer\nType checking and error handling\n\n\n\n\n\n\n\n\n\nThe limitation:\n\n\nFastAPI is not a user interface. It’s designed for developers and systems, not stakeholders.\n\n\n\n\n\nFastAPI is a Python framework specifically designed for building REST APIs quickly\nBig advantage: it’s Python, so we don’t need to learn Java, Go, or other backend languages\nIt auto-generates interactive documentation at /docs - you can test your API right in the browser\nIt validates inputs automatically using Python type hints - if someone sends invalid data, FastAPI catches it\nAnd despite the name, it really is fast - comparable to Node.js and Go for performance\nIn our Rossmann project, FastAPI provides several endpoints: /predict for getting predictions, /health for checking if the system is running, /docs for exploring the API\nThe key limitation: while you CAN interact with the model through FastAPI, the interface is very technical\nIt’s designed for developers making programmatic calls, or for other systems to integrate with\nA business stakeholder doesn’t want to write JSON and make HTTP POST requests\nDemo plan: I’ll show you MLflow UI with our registered models, then launch FastAPI and show the /docs endpoint, then make a prediction\nYou’ll see that while it works, it’s not the kind of interface you’d hand to a store manager or executive\nThis is exactly why we need Streamlit - to put a user-friendly face on this API"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-fastapi",
+    "href": "workshop/slides/deployment-prototyping.html#demo-fastapi",
+    "title": "From Model to Usable System",
+    "section": "Demo: FastAPI",
+    "text": "Demo: FastAPI\n\n\n\nLaunch the services:\n\nStart MLflow UI:\n\nbash scripts/start_mlflow.sh\n\nLaunch FastAPI:\n\nbash scripts/launch_api.sh\n\n\nMLflow UI: http://localhost:5000\nFastAPI: http://localhost:8000/docs\n\n\n\n\n\n\n\n\nLet’s see this in action - I’ll launch both services\nFirst, start MLflow UI with bash scripts/start_mlflow.sh - this opens the model registry on port 5000\nNavigate to localhost:5000 and show the registered models, point out the production version\nSecond, launch FastAPI with bash scripts/launch_api.sh - this starts the API on port 8000\nNavigate to localhost:8000/docs - this is the auto-generated API documentation\nShow the /predict endpoint, click “Try it out”, enter some sample data as JSON\nMake a prediction and show the response\nPoint out: this works, but imagine asking a store manager to write JSON and make POST requests\nThis technical interface is exactly why we need Streamlit - to make this accessible"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#demo-streamlit-dashboard",
+    "href": "workshop/slides/deployment-prototyping.html#demo-streamlit-dashboard",
+    "title": "From Model to Usable System",
+    "section": "Demo: Streamlit Dashboard",
+    "text": "Demo: Streamlit Dashboard\n\n\n\nSystem Flow:\n\n\n\n\n\nflowchart LR\n    A[👤 User] --&gt; B[🎨 Streamlit]\n    B --&gt; C[⚡ FastAPI]\n    C --&gt; D[📦 MLflow]\n    D --&gt; C\n    C --&gt; B\n    B --&gt; A\n\n    style A fill:#e8f5e9\n    style B fill:#e1f5fe\n    style C fill:#fff3e0\n    style D fill:#f3e5f5\n\n\n\n\n\n\n\nLaunch the full system:\nbash scripts/launch_dashboard.sh\n\nDashboard: http://localhost:8501\n\n\n\n\n\n\nNow let’s see the complete system with Streamlit as the user interface\nThe diagram shows the full flow: User interacts with Streamlit, Streamlit calls FastAPI, FastAPI loads the model from MLflow, predictions flow back\nTo launch everything at once, we can use the dashboard launch script: bash scripts/launch_dashboard.sh\nThis starts all three services: MLflow (port 5000), FastAPI (port 8000), and Streamlit (port 8501)\nNavigate to localhost:8501 to see the Streamlit dashboard\nThis is the home page - notice how different it is from the FastAPI docs\nWe have a clean interface showing system status, API health, which model is loaded, and what’s in the registry\nThis is what stakeholders need: a clear, visual interface that abstracts away the complexity\nNo JSON, no POST requests, no technical jargon - just a dashboard they can use"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#getting-started-with-your-project",
+    "href": "workshop/slides/deployment-prototyping.html#getting-started-with-your-project",
+    "title": "From Model to Usable System",
+    "section": "Getting Started with Your Project",
+    "text": "Getting Started with Your Project\n\nRecommended approach:\n\nStart simple: Build a basic FastAPI app with a /predict endpoint\n\nTons of examples online - this is well-documented territory\n\nAdd your model: Load your trained model and serve predictions via the API\n\nTest it with the auto-generated /docs interface\n\nBuild a UI: Create a simple Streamlit frontend that calls your API\n\nStart with one input form and one prediction display\n\nIterate: Add features as needed (batch predictions, monitoring, etc.)\n\n\n\n\n\n\n\n\nLeverage AI tools!\n\n\nTasks like these are perfect for ChatGPT, Claude, or Gemini. There are thousands of FastAPI + Streamlit examples online, so these tools excel at generating working prototypes.\n\n\n\n\n\nYou don’t need to build everything at once - start with the smallest useful prototype\nStep 1: Build a super basic FastAPI app - even just a “hello world” endpoint to understand the pattern\nThere are tons of FastAPI tutorials online, so this is very accessible\nStep 2: Swap “hello world” for your actual model - load it and return predictions\nTest it using the /docs interface FastAPI generates - make sure it works before adding a UI\nStep 3: Build a simple Streamlit app - just one page with a form that sends data to your API\nStreamlit has great examples in their docs - you can get something working in an hour\nStep 4: Once you have the basics, iterate - add batch prediction, add monitoring, improve the UI\nKey insight: This is a perfect use case for AI coding assistants\nSince there are so many examples of FastAPI and Streamlit online, tools like ChatGPT and Claude can generate working code very effectively\nYou can literally ask “Create a FastAPI endpoint that loads a sklearn model and returns predictions” and get a working example\nSame with Streamlit: “Create a Streamlit form that calls a FastAPI endpoint and displays the result”\nUse AI to accelerate the prototype - then customize it for your specific needs\nThe goal is to make your model usable, not to become a web development expert"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#aka-crap.0",
+    "href": "workshop/slides/deployment-prototyping.html#aka-crap.0",
+    "title": "From Model to Usable System",
+    "section": "aka crap.0",
+    "text": "aka crap.0"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#mvp-expectations-progress-over-perfection",
+    "href": "workshop/slides/deployment-prototyping.html#mvp-expectations-progress-over-perfection",
+    "title": "From Model to Usable System",
+    "section": "MVP Expectations: Progress Over Perfection",
+    "text": "MVP Expectations: Progress Over Perfection\n\n\nI have LOW expectations for the MVP.  Components don’t need to be fully integrated yet.\n\n\n\n\n\n\n\n\nWhat’s acceptable:\n\n\n\nData pipeline working + Model training/logging working, but no UI yet ✓\nSome components operational but not fully connected ✓\nPartial implementation with clear vision for completion ✓\n\n\n\n\n\n\nLet me be very clear: I have low expectations for this MVP\nYou might have a data pipeline working that ingests and prepares data\nAnd a separate workflow that trains a model, logs experiments, and can make predictions\nBut maybe they’re not connected to a UI yet - that’s totally fine\nThe goal is to make progress towards your final project and get feedback early\nYou need to demo what you DO have built and functioning\nThen paint a clear picture of what you expect the final working prototype to look like\nThis is about showing progress and getting course-corrected if needed\nIt’s NOT about having a polished, fully integrated system yet"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#mvp-requirements",
+    "href": "workshop/slides/deployment-prototyping.html#mvp-requirements",
+    "title": "From Model to Usable System",
+    "section": "MVP Requirements",
+    "text": "MVP Requirements\nWhat I’m looking for:\n\nA clear vision of your complete system architecture\n\nSystem diagram showing data flow, model training, and planned deployment\n\nWorking components that demonstrate progress\n\nData pipeline (ingestion, validation, versioning)\nML model development (experiment tracking, model versioning)\n\nA demo of what you’ve built so far\n\nShow the components working, even if not fully integrated\n\nA plan for completion\n\nWhat challenges remain? What are your next steps?\n\n\n\n\n\n\n\n\n\nBonus: System Integration (Extra Credit)\n\n\nIf you build a FastAPI or Streamlit app to showcase predictions, you can earn extra credit — but it’s NOT required for the MVP.\n\n\n\n\n\nI want to see four things from your MVP\nFirst: A clear architectural vision - show me a system diagram that illustrates the full prototype\nEven if you haven’t built everything, the diagram shows you’ve thought through how the pieces will connect\nThis includes data ingestion, processing, feature engineering, model experimentation, and your planned deployment\nSecond: Working components - show me actual functioning pieces\nData pipeline: can you ingest data, validate it, version it? This could be batch CSVs or streaming - whatever fits your project\nML model development: are you tracking experiments with MLflow or W&B? Do you have versioned models in a registry?\nComponents don’t need to be fully integrated yet - that’s okay\nThird: Demo what you’ve built - show me the pipeline running, show me experiment tracking, show me models being versioned\nFourth: Tell me your plan - what’s blocking you? What remains to be done for the final project?\nThe bonus is system integration - if you build a UI or API, that’s extra credit, but focus on the fundamentals first\nThe key message: show progress on real components AND demonstrate you understand the full system architecture"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#deliverable-recorded-presentation",
+    "href": "workshop/slides/deployment-prototyping.html#deliverable-recorded-presentation",
+    "title": "From Model to Usable System",
+    "section": "Deliverable: Recorded Presentation",
+    "text": "Deliverable: Recorded Presentation\n\n5-10 minute recorded presentation and demo covering:\n\nProblem & Purpose: What problem are you solving and why does it matter?\nSystem Diagram: High-level architecture showing data ingestion, processing, feature engineering, model experimentation, and planned deployment\nPrototype Demo: Show what you’ve built - data pipeline, model training, experiment tracking, etc.\nChallenges & Next Steps: What problems do you anticipate? What remains to be done?\n\n\n\nThis is a GROUP submission - one presentation per team\nEveryone should contribute, but not everyone needs to talk in the video\nStart with a clear problem statement - what are you trying to solve and why it matters\nShow a system diagram that illustrates your architecture - even if parts aren’t built yet\nThis helps you think through the full system and helps me understand your vision\nDemo what you have working: show the data pipeline ingesting and processing data\nShow your experiment tracking in MLflow or W&B\nShow a model being trained and versioned\nIf you have a UI, show it - but it’s not required for the MVP\nEnd with challenges and next steps: what’s blocking you? What do you need to finish?\nThis gives me a chance to provide feedback before the final submission"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#grading-criteria",
+    "href": "workshop/slides/deployment-prototyping.html#grading-criteria",
+    "title": "From Model to Usable System",
+    "section": "Grading Criteria",
+    "text": "Grading Criteria\n\n\n\n\n\n\n\n\n\nComponent\nPoints\nWhat We’re Looking For\n\n\n\n\nProblem & Purpose\n4 pts\nIs the problem well-defined? Is the system’s purpose clear?\n\n\nSystem Diagram\n4 pts\nDoes the diagram effectively show the data pipeline, model experimentation, and planned deployment?\n\n\nData Pipeline\n4 pts\nFunctional pipeline with ingestion, processing, validation, and versioning?\n\n\nML Model Development\n4 pts\nModel trained with proper experiment tracking and versioning?\n\n\nPresentation Quality\n4 pts\nClear communication and informative demo?\n\n\nSystem Integration\nExtra Credit\nEarly integration into API, web app, or CLI tool?\n\n\n\nTotal: 20 points (+ extra credit)\n\n\nThe grading is straightforward and focused on the fundamentals\nProblem & Purpose (4 pts): Can you clearly articulate what you’re solving and why it matters?\nSystem Diagram (4 pts): Do you have a clear architectural vision, even if it’s not fully implemented?\nData Pipeline (4 pts): Can you ingest, process, validate, and version your data?\nML Model Development (4 pts): Are you tracking experiments and versioning models properly?\nPresentation Quality (4 pts): Can you clearly communicate your work and demo what you’ve built?\nSystem Integration (Extra Credit): If you build a FastAPI or Streamlit app, you can earn extra points\nBut remember: the UI is NOT required for the MVP - focus on the data and modeling pieces first"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#peer-review-requirement",
+    "href": "workshop/slides/deployment-prototyping.html#peer-review-requirement",
+    "title": "From Model to Usable System",
+    "section": "Peer Review Requirement",
+    "text": "Peer Review Requirement\n\n\n\n\n\n\n\nAfter submitting your MVP:\n\n\nEach student must complete peer reviews:\n\nReview two other group’s presentations\nFill out the grading rubric for each\nProvide at least 100 words of constructive feedback\n\nFailure to complete peer review = 10% deduction from engagement grade\n\n\n\n\n\nThis isn’t just a box to check - peer review is valuable for your learning\nYou’ll see how other teams approached the same problems\nYou’ll practice evaluating ML systems and providing constructive feedback\nEach student reviews TWO other presentations\nFill out the grading rubric honestly - use the same criteria I’m using\nProvide at least 100 words (one paragraph) of written feedback\nBe constructive: what did they do well? What could be improved?\nMissing the peer review will cost you 10% of your engagement grade for the course\nTake it seriously - both for your own learning and to help your classmates"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#submission-guidelines",
+    "href": "workshop/slides/deployment-prototyping.html#submission-guidelines",
+    "title": "From Model to Usable System",
+    "section": "Submission Guidelines",
+    "text": "Submission Guidelines\n\n\n\n\n\n\n\nImportant Submission Details:\n\n\n\nSingle group submission - only one team member needs to submit\nUpload the recorded video - no need to submit slides or other documents\nGive yourself time! - Don’t wait until 11:59 PM to upload a large video file\nRecommended: Have everything ready by mid-day with several hours of cushion\n\nIf you’re uploading a 4.7 MB MP4 at 11:59 PM, don’t expect it to complete on time — and don’t expect extra time from the instructor.\n\n\n\n\n\nThis is a group submission - only ONE person needs to upload the video\nYou don’t need to submit slides, documentation, or anything else - just the recorded presentation\nThe most common mistake: waiting until the last minute to upload a large video file\nIf multiple group members submit, only the most recent submission will be kept for all members\nI strongly recommend finishing early and uploading by mid-day on the deadline\nGive yourself several hours of cushion for the upload\nCanvas can be slow, files can be large, internet can be unreliable\nIf you’re trying to upload a big file at 11:59 PM and it doesn’t complete, that’s on you\nI will NOT grant extensions for technical issues that could have been avoided\nPlan ahead, finish early, upload with plenty of time to spare"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#grading-rubric-overview",
+    "href": "workshop/slides/deployment-prototyping.html#grading-rubric-overview",
+    "title": "From Model to Usable System",
+    "section": "Grading Rubric Overview",
+    "text": "Grading Rubric Overview\n\n\n\n\n\nComponent\nPoints\n\n\n\n\nClarity of Problem & ML System Purpose\n4 pts\n\n\nClarity of ML System Diagram\n4 pts\n\n\nImplementation of Data Pipeline\n4 pts\n\n\nML Model Development\n4 pts\n\n\nPresentation Quality\n4 pts\n\n\nSystem Integration\nExtra Credit (+0-2 pts)\n\n\n\n\nTotal: 20 points (+ extra credit)\n\n\n\nThe rubric is designed to evaluate both what you’ve built and how you communicate it\nEach category is worth 4 points with specific criteria for full, partial, and no credit\nThe system integration is extra credit - not required but encouraged\nLet’s look at each category in detail"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#grading-criteria-problem-system-diagram",
+    "href": "workshop/slides/deployment-prototyping.html#grading-criteria-problem-system-diagram",
+    "title": "From Model to Usable System",
+    "section": "Grading Criteria: Problem & System Diagram",
+    "text": "Grading Criteria: Problem & System Diagram\n\n\nClarity of Problem & ML System Purpose (4 pts)\n\n4 pts (Good): Clearly defines the problem and explains why ML is necessary\n2 pts (Ok): Problem is somewhat defined but lacks depth or clarity\n0 pts (Bad): Problem is unclear or missing; no justification for ML\n\n\nClarity of ML System Diagram (4 pts)\n\n4 pts (Good): Diagram effectively illustrates data pipeline, model experimentation, and planned deployment\n2 pts (Ok): Diagram is present but lacks key elements or clarity\n0 pts (Bad): No diagram, or diagram is incomplete/incorrect\n\n\n\n\nProblem & Purpose: I want to understand what you’re solving and why it matters\nGood (4 pts): Clear problem statement with context and explanation of why ML is the right approach\nOk (2 pts): You explain the problem but it’s vague or doesn’t justify why ML is needed\nBad (0 pts): No clear problem or you skip this entirely\nSystem Diagram: Show me the architecture, even if you haven’t built everything yet\nGood (4 pts): Clear diagram showing data flow, model training, and deployment strategy\nOk (2 pts): Diagram exists but missing pieces or hard to understand\nBad (0 pts): No diagram or diagram doesn’t make sense"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#grading-criteria-implementation",
+    "href": "workshop/slides/deployment-prototyping.html#grading-criteria-implementation",
+    "title": "From Model to Usable System",
+    "section": "Grading Criteria: Implementation",
+    "text": "Grading Criteria: Implementation\n\n\nImplementation of Data Pipeline (4 pts)\n\n4 pts (Good): Functional pipeline with ingestion, processing, validation, and versioning\n2 pts (Ok): Partial implementation; some pipeline elements missing or unclear\n0 pts (Bad): No data pipeline, or implementation is incorrect\n\n\nML Model Development (4 pts)\n\n4 pts (Good): Model is trained with experiment tracking and versioning using appropriate tools\n2 pts (Ok): Model is trained but lacks proper tracking and versioning\n0 pts (Bad): No trained model, or no evidence of experiment tracking/versioning\n\n\n\n\nData Pipeline: Can you get data into your system, validate it, and version it?\nGood (4 pts): Working pipeline that ingests data, validates quality, versions it, and stores it efficiently\nOk (2 pts): Some pieces work but others are missing - maybe you have ingestion but no validation\nBad (0 pts): No pipeline or it doesn’t work at all\nML Model Development: Are you tracking your experiments and versioning your models?\nGood (4 pts): Using MLflow or W&B to log experiments with hyperparameters, metrics, and artifacts; models are versioned in a registry\nOk (2 pts): You trained a model but didn’t properly track experiments or version it\nBad (0 pts): No trained model or no evidence of tracking/versioning"
+  },
+  {
+    "objectID": "workshop/slides/deployment-prototyping.html#grading-criteria-presentation-extra-credit",
+    "href": "workshop/slides/deployment-prototyping.html#grading-criteria-presentation-extra-credit",
+    "title": "From Model to Usable System",
+    "section": "Grading Criteria: Presentation & Extra Credit",
+    "text": "Grading Criteria: Presentation & Extra Credit\n\n\nPresentation Quality (4 pts)\n\n4 pts (Good): Problem, approach, and demo are clearly communicated with a structured presentation\n2 pts (Ok): Presentation is somewhat clear but lacks organization or detail\n0 pts (Bad): Poor or missing presentation; lacks clarity and structure\n\n\nSystem Integration (Extra Credit)\n\n+2 pts: Fully functioning API/web app showcasing predictions or key functionalities\n+1 pt: Partial system integration effort shown but incomplete\n0 pts: No attempt at system integration\n\n\n\n\nPresentation Quality: How well do you communicate your work?\nGood (4 pts): Clear, organized presentation that walks through the problem, shows the demo, and explains next steps\nOk (2 pts): You cover the material but it’s disorganized or lacks important details\nBad (0 pts): Presentation is confusing, incomplete, or missing\nSystem Integration: This is EXTRA CREDIT - not required but encouraged\n+2 pts: You built a working FastAPI or Streamlit app that demonstrates predictions - this is impressive for an MVP\n+1 pt: You started building an app but it’s not fully functional yet - still shows initiative\n0 pts: No UI/API integration, which is totally fine - you can still get full credit on the other categories\nRemember: focus on the data pipeline and model development first - the UI is a bonus"
+  }
+]

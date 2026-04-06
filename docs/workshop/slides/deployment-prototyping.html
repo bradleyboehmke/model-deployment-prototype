@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.31">
+
+  <meta name="author" content="Brad Boehmke">
+  <title>From Model to Usable System: Prototyping Deployment &amp; Monitoring – From Model to Usable System</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-2c1b5f745a11cfad616ebade4a4a7d24.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <meta name="mermaid-theme" content="neutral">
+  <script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+  <script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+  <link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">From Model to Usable System</h1>
+  <p class="subtitle">Prototyping Deployment &amp; Monitoring</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Brad Boehmke 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="welcome" class="title-slide slide level1 center" data-background="#43464B">
+<h1>Welcome</h1>
+
+</section>
+<section id="applied-workshops-series" class="slide level2" data-background-image="assets/images/bridge.jpg" data-background-size="cover" data-background-position="center">
+<h2>Applied Workshops Series</h2>
+<p><strong>Bridging the gap between classroom and industry</strong></p>
+<p><br><br><br><br><br><br><br><br></p>
+<p><span style="color: white;">This series shares best practices and industry standards not always covered in coursework — practical skills that can differentiate you early in your career.</span></p>
+<aside class="notes">
+<p>Frame this as part of the applied workshop series. These workshops focus on practical skills that matter in industry but are often underrepresented in coursework. Today we move from experiment tracking into making models actually usable.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="todays-agenda" class="slide level2 smaller">
+<h2>Today’s Agenda</h2>
+<p><br></p>
+<ol type="1">
+<li><strong>Deployment Concepts</strong>: What deployment actually means</li>
+<li><strong>Prototyping Approach</strong>: Building usable systems without production infrastructure</li>
+<li><strong>Live Demo</strong>: Rossmann forecasting project walkthrough</li>
+<li><strong>Your Final Project MVP</strong>: Expectations and getting started</li>
+</ol>
+<p><br></p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Today’s Goal</strong></p>
+</div>
+<div class="callout-content">
+<p>Walk out knowing how to take a trained model and make it into something people can actually use.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>This is practical and applied - we’ll start with concepts, build up to architecture, and see a real system</li>
+<li>The focus is on making models accessible and usable, not production deployment</li>
+<li>We’ll use the Rossmann project as a concrete example throughout</li>
+<li>By the end you should be able to start building a prototype for your own final project</li>
+<li>This workshop bridges the gap between model training and stakeholder interaction</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="the-problem" class="title-slide slide level1 center" data-background="#43464B">
+<h1>The Problem</h1>
+
+</section>
+<section id="when-does-a-model-create-value" class="slide level2">
+<h2>When Does a Model Create Value?</h2>
+<p><br></p>
+<div style="text-align: center; font-size: 1.5em;">
+<p>Experiments and registered models don’t create <strong>value</strong>. <br><br> They help us find the <strong>best</strong> model.</p>
+</div>
+<p><br></p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The Reality</strong></p>
+</div>
+<div class="callout-content">
+<p>Models don’t create value by existing. They create value by being <strong>used</strong>.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>This is the anchor idea for the entire workshop</li>
+<li>You’ve learned to track experiments in MLflow and register your best models</li>
+<li>That helps you understand model performance and select which model to use</li>
+<li>But tracking and registering a model doesn’t make it usable yet</li>
+<li>Value comes when a stakeholder, a decision-maker, or a system can interact with the model’s predictions</li>
+<li>The gap between “I selected my best model” and “someone is using this model” is what we’re addressing today</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="most-models-never-get-used" class="slide level2">
+<h2>Most Models Never Get Used</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><strong>What typically happens:</strong></p>
+<ul>
+<li class="fragment">We train hundreds of models during experimentation</li>
+<li class="fragment">We select the best model</li>
+<li class="fragment">Results shared as static reports</li>
+<li class="fragment">Stakeholder can’t interact with it</li>
+<li class="fragment">Model gets stale and forgotten</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<p><img data-src="assets/images/dusty-models.png"></p>
+</div></div>
+<aside class="notes">
+<ul>
+<li>This is extremely common in industry, not just in school</li>
+<li>During experimentation, you may train dozens or hundreds of model variations</li>
+<li>You select the best performing model and register it in MLflow</li>
+<li>But then what? Results get shared as a PDF or slide deck</li>
+<li>The stakeholder can’t ask “what if” questions, can’t try different inputs</li>
+<li>There’s no way to use the model on new data without calling the data scientist</li>
+<li>Our objective is to create a system around our preferred model that makes it usable</li>
+<li>Over time, without this system, the model just fades away — nobody maintains it, nobody uses it</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-gap" class="slide level2">
+<h2>The Gap</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Stakeholders don’t want your code</strong></p>
+</div>
+<div class="callout-content">
+<p>They want your <strong>answers</strong>.</p>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Don’t care about your feature engineering pipeline</li>
+<li>Want to ask: “What will sales look like next week if we run a promotion?”</li>
+<li>Want to upload a spreadsheet and get predictions back</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<p><img data-src="assets/images/give-me-your-model.png" style="width:70.0%"></p>
+</div></div>
+<aside class="notes">
+<ul>
+<li>Put yourself in the stakeholder’s shoes: they don’t care about your feature engineering pipeline</li>
+<li>They want to ask: “What will sales look like next week if we run a promotion?”</li>
+<li>They want to upload a spreadsheet and get predictions back</li>
+<li>Our job as data scientists extends beyond modeling — we need to make models accessible</li>
+<li>This is increasingly a differentiating skill in the job market</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="abstracting-technical-complexity" class="slide level2">
+<h2>Abstracting Technical Complexity</h2>
+<p><br></p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Remember Your Users</strong></p>
+</div>
+<div class="callout-content">
+<p>Your ML system will be used by stakeholders who:</p>
+<ul>
+<li>May lack technical ML knowledge</li>
+<li>Don’t have time to provide 50+ detailed inputs</li>
+<li>Can’t interpret raw model outputs</li>
+</ul>
+</div>
+</div>
+</div>
+<p><br></p>
+<div style="text-align: center; font-size: 1.2em;">
+<p>Our system must <strong>hide</strong> the technical nuances.</p>
+</div>
+<aside class="notes">
+<ul>
+<li>This is a critical design principle: your users are not data scientists</li>
+<li>They may be store managers, business analysts, marketing directors</li>
+<li>They don’t know what a lag feature is or why you need rolling statistics</li>
+<li>They don’t have time to manually fill in 46 feature values</li>
+<li>And they can’t interpret a raw prediction without context</li>
+<li>Our job is to abstract away the complexity: simple inputs, clear outputs</li>
+<li>The system handles feature engineering, model loading, prediction formatting behind the scenes</li>
+<li>DISCUSSION OPPORTUNITY: Have each group spend 2-3 minutes thinking about:
+<ul>
+<li>Who are your end users?</li>
+<li>What technical nuances need to be hidden from them?</li>
+<li>What are the minimum inputs you need from them?</li>
+<li>What outputs do they actually care about?</li>
+</ul></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="our-goal" class="slide level2">
+<h2>Our Goal</h2>
+<p><br></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Learning What Goes Into Deployment</strong></p>
+</div>
+<div class="callout-content">
+<p>Part of this class is understanding what it takes to deploy a model.</p>
+<p><strong>The reality:</strong></p>
+<ul>
+<li>Full deployment is extremely challenging</li>
+<li>It often requires technical support from engineers</li>
+<li>Production infrastructure takes significant time and resources</li>
+</ul>
+</div>
+</div>
+</div>
+<p><br></p>
+<div style="text-align: center; font-size: 1.3em;">
+<p>We start by demonstrating how our models could be <strong>usable</strong> to stakeholders.</p>
+</div>
+<aside class="notes">
+<ul>
+<li>This class is about understanding what goes into deploying a model</li>
+<li>The chapter readings cover more complicated deployment concerns: infrastructure, scaling, security, CI/CD</li>
+<li>But we need to acknowledge the reality: full production deployment is extremely challenging</li>
+<li>You will typically have technical support from engineers to make true production deployment happen</li>
+<li>So where do we start as data scientists?</li>
+<li>The first step is demonstrating at a basic level how our models could be usable to the stakeholder</li>
+<li>We focus on building a simplistic ML system that mimics a deployment framework</li>
+<li>This is often exactly how it works in industry: you start with a simple prototype that proves the concept</li>
+<li>Then, with engineering support, it matures into a true production deployment framework</li>
+<li>Today we’re focusing on that first step: making something usable that demonstrates value</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="deployment-concepts" class="title-slide slide level1 center" data-background="#43464B">
+<h1>Deployment Concepts</h1>
+
+</section>
+<section id="what-is-deployment" class="slide level2">
+<h2>What Is Deployment?</h2>
+<p><br></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Deployment</strong></p>
+</div>
+<div class="callout-content">
+<p>Making a trained model accessible so it can receive inputs and return predictions.</p>
+</div>
+</div>
+</div>
+<p><br></p>
+<div style="text-align: center;">
+<div class="cell" data-reveal="true" data-fig-width="9" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A["📥 Input Data"] --&gt; B["🤖 Model"]
+    B --&gt; C["📤 Predictions"]
+
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style C fill:#e8f5e9
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>Unfortunately, this simple view hides the complexity of what it really takes to deploy a model in production!</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>At its simplest, deployment is just this: input goes in, prediction comes out</li>
+<li>The model becomes a service that other things can talk to</li>
+<li>Right now your models probably work like this: open notebook, load data, run cells, read output</li>
+<li>Deployment means wrapping that in something others can access without opening your notebook</li>
+<li>The mechanism can be an API, a web app, a scheduled job — but the core idea is the same</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="what-production-actually-involves" class="slide level2 smaller">
+<h2>What Production Actually Involves</h2>
+<ul>
+<li class="fragment"><strong>Model Registry &amp; Versioning</strong> — managing model updates without breaking things</li>
+<li class="fragment"><strong>APIs</strong> — endpoints that accept requests and return predictions</li>
+<li class="fragment"><strong>UIs</strong> — user interfaces to allow stakeholders to interact with the model</li>
+<li class="fragment"><strong>Infrastructure</strong> — servers, containers, scaling, uptime</li>
+<li class="fragment"><strong>Security</strong> — authentication, data protection, access control</li>
+<li class="fragment"><strong>Monitoring</strong> — tracking performance, detecting drift, alerting</li>
+<li class="fragment"><strong>CI/CD</strong> — automated testing, deployment pipelines</li>
+<li class="fragment"><span style="color: red;">and sometimes far more!</span></li>
+</ul>
+<aside class="notes">
+<ul>
+<li>This is the full picture of what “production deployment” looks like in industry</li>
+<li>APIs are how most models get served: REST endpoints that accept JSON and return predictions</li>
+<li>Infrastructure means someone has to keep the servers running, handle load spikes, manage containers</li>
+<li>Security is critical: you can’t just expose a model to the internet without authentication</li>
+<li>Monitoring ensures the model keeps working correctly over time</li>
+<li>CI/CD automates the process of testing and deploying new model versions</li>
+<li>Versioning lets you update models safely (canary deployments, blue-green, shadow)</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="production-ml-system-architecture" class="slide level2 smaller scrollable">
+<h2>Production ML System Architecture</h2>
+<div class="cell" data-reveal="true" data-fig-width="12" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    User["👤 &lt;b&gt;User&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Stakeholder, Analyst,&lt;br/&gt;Business User&lt;/i&gt;"]
+
+    subgraph UI["User Interface Layer"]
+        Web["Web UI&lt;br/&gt;&lt;i&gt;Streamlit, Gradio, React&lt;/i&gt;"]
+        Mobile["Mobile Apps&lt;br/&gt;&lt;i&gt;iOS, Android&lt;/i&gt;"]
+    end
+
+    subgraph API["API Layer"]
+        Gateway["API Gateway&lt;br/&gt;&lt;i&gt;Kong, AWS API Gateway&lt;/i&gt;"]
+        Auth["Authentication&lt;br/&gt;&lt;i&gt;OAuth2, JWT&lt;/i&gt;"]
+    end
+
+    subgraph Serving["Model Serving"]
+        FastAPI["FastAPI/Flask"]
+        ModelServer["Model Server&lt;br/&gt;&lt;i&gt;TensorFlow Serving, Triton&lt;/i&gt;"]
+    end
+
+    subgraph Registry["Model Registry &amp; Versioning"]
+        MLflow["MLflow Registry"]
+        Storage["Model Storage&lt;br/&gt;&lt;i&gt;S3, GCS, Azure Blob&lt;/i&gt;"]
+    end
+
+    subgraph Infra["Infrastructure"]
+        Container["Containers&lt;br/&gt;&lt;i&gt;Docker&lt;/i&gt;"]
+        Orchestration["Orchestration&lt;br/&gt;&lt;i&gt;Kubernetes, ECS&lt;/i&gt;"]
+        LoadBalancer["Load Balancer&lt;br/&gt;&lt;i&gt;NGINX, AWS ALB&lt;/i&gt;"]
+    end
+
+    subgraph Monitor["Monitoring &amp; Logging"]
+        Metrics["Metrics&lt;br/&gt;&lt;i&gt;Prometheus, CloudWatch&lt;/i&gt;"]
+        Drift["Drift Detection&lt;br/&gt;&lt;i&gt;Evidently, WhyLabs&lt;/i&gt;"]
+        Logs["Logging&lt;br/&gt;&lt;i&gt;ELK Stack, Splunk&lt;/i&gt;"]
+    end
+
+    subgraph CICD["CI/CD Pipeline"]
+        Test["Testing&lt;br/&gt;&lt;i&gt;Pytest, Great Expectations&lt;/i&gt;"]
+        Deploy["Deployment&lt;br/&gt;&lt;i&gt;GitHub Actions, Jenkins&lt;/i&gt;"]
+        Version["Version Control&lt;br/&gt;&lt;i&gt;Git, DVC&lt;/i&gt;"]
+    end
+
+    User --&gt; Web
+    User --&gt; Mobile
+    Web --&gt; Gateway
+    Mobile --&gt; Gateway
+    Gateway --&gt; Auth
+    Auth --&gt; FastAPI
+    FastAPI --&gt; ModelServer
+    ModelServer --&gt; MLflow
+    MLflow --&gt; Storage
+
+    FastAPI --&gt; Container
+    Container --&gt; Orchestration
+    Orchestration --&gt; LoadBalancer
+
+    FastAPI --&gt; Metrics
+    FastAPI --&gt; Drift
+    FastAPI --&gt; Logs
+
+    Version --&gt; Test
+    Test --&gt; Deploy
+    Deploy --&gt; Container
+
+    style User fill:#ffebee,stroke:#c62828,stroke-width:3px
+    style UI fill:#e1f5fe
+    style API fill:#f3e5f5
+    style Serving fill:#fff3e0
+    style Registry fill:#e8f5e9
+    style Infra fill:#fce4ec
+    style Monitor fill:#fff9c4
+    style CICD fill:#f0f4c3
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>This diagram shows the complexity of a real production ML system</li>
+<li>Notice the User on the left: the stakeholder, analyst, or business user who needs predictions</li>
+<li>The user only interacts with the User Interface layer - they’re shielded from all the complexity to the right</li>
+<li>Each box represents a major component with production-grade tools</li>
+<li>Notice how many moving parts there are compared to the simple notebook workflow</li>
+<li>User Interface layer: web apps, mobile apps for stakeholder interaction</li>
+<li>API layer: gateway for routing, authentication for security</li>
+<li>Model serving: FastAPI or specialized model servers for predictions</li>
+<li>Registry: MLflow for versioning, cloud storage for model artifacts</li>
+<li>Infrastructure: containers, orchestration (Kubernetes), load balancing</li>
+<li>Monitoring: metrics tracking, drift detection, centralized logging</li>
+<li>CI/CD: automated testing, deployment pipelines, version control</li>
+<li>All of these components need to work together seamlessly</li>
+<li>This is why we say production deployment is hard and requires engineering support</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="this-is-hard" class="slide level2">
+<h2>This Is Hard</h2>
+<p><br></p>
+<div style="text-align: center; font-size: 1.3em;">
+<p>Production deployment requires:</p>
+</div>
+<p><br></p>
+<ul>
+<li class="fragment">Engineering teams and infrastructure support</li>
+<li class="fragment">Significant time investment</li>
+<li class="fragment">Organizational buy-in and resources</li>
+</ul>
+<p><br></p>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Reality Check</strong></p>
+</div>
+<div class="callout-content">
+<p>Most data science teams don’t have this. Especially not for a class project.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Be honest about this: real production deployment is a team sport</li>
+<li>It involves DevOps engineers, platform teams, SREs</li>
+<li>It takes weeks or months to set up properly</li>
+<li>Most companies are still figuring this out, let alone student projects</li>
+<li>So what do we do? We don’t skip deployment entirely — we prototype</li>
+<li>This is where the practical value of today’s workshop comes in</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="but-we-can-start-somewhere" class="slide level2">
+<h2>But We Can Start Somewhere</h2>
+<p><br></p>
+<div style="text-align: center; font-size: 1.3em;">
+<p>We may not build the <strong>entire</strong> production system… <br><br> But we <strong>can</strong> build working prototypes.</p>
+</div>
+<p><br></p>
+<ol type="1">
+<li class="fragment"><strong>Turn a model into a usable system</strong> that demonstrates what production could look like</li>
+<li class="fragment"><strong>Use tools and patterns</strong> that naturally migrate to production when the time comes</li>
+</ol>
+<aside class="notes">
+<ul>
+<li>Here’s the key insight: you don’t need to wait for full production infrastructure to make progress</li>
+<li>We can build working prototypes that demonstrate the value of our models</li>
+<li>These prototypes turn a model into something usable - something stakeholders can interact with</li>
+<li>They show what a production system could look like without requiring the full complexity</li>
+<li>And critically, we’ll use tools and patterns that are production-ready</li>
+<li>FastAPI, Streamlit, MLflow - these aren’t toy tools, they’re used in real production systems</li>
+<li>When you do get engineering support, your prototype becomes the foundation, not throwaway code</li>
+<li>This is a practical middle ground: make your model usable now, build toward production later</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="prototyping" class="title-slide slide level1 center" data-background="#43464B">
+<h1>Prototyping</h1>
+
+</section>
+<section id="you-dont-need-production-infrastructure" class="slide level2">
+<h2>You Don’t Need Production Infrastructure</h2>
+<p><br></p>
+<div style="text-align: center; font-size: 1.2em;">
+<p>A prototype <strong>simplifies</strong> the architecture. <br><br> But when done smartly, it doesn’t add <strong>tech debt</strong>.</p>
+</div>
+<p><br></p>
+<div style="text-align: center;">
+<div class="cell" data-reveal="true" data-fig-width="10" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A["🧪 Models"] --&gt; B["🔧 Prototype System"]
+    B --&gt; C["🏭 Production"]
+
+    style A fill:#ffcdd2
+    style B fill:#4caf50,stroke:#2e7d32,stroke-width:4px
+    style C fill:#e1f5fe
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>You don’t need production infrastructure to make a model usable</li>
+<li>A prototype simplifies the architecture - fewer components, less complexity</li>
+<li>But here’s the key: when done smartly, it doesn’t create tech debt</li>
+<li>How? By using production-ready tools and patterns from the start</li>
+<li>FastAPI, Streamlit, MLflow - these are the same tools you’d use in production</li>
+<li>You’re not building throwaway code, you’re building a foundation</li>
+<li>When engineering support arrives, you extend the prototype, you don’t rewrite it</li>
+<li>This is strategic prototyping: start simple, but start right</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-makes-a-usable-prototype" class="slide level2">
+<h2>What Makes a Usable Prototype?</h2>
+<p><br></p>
+<ol type="1">
+<li><strong>User can provide input</strong> — forms, uploads, selections</li>
+<li><strong>Model generates predictions</strong> — real-time or batch</li>
+<li><strong>Results are understandable</strong> — clear output, context, interpretation</li>
+<li><strong>It actually runs</strong> — not just a notebook, but a working system</li>
+</ol>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Notice what’s <strong>NOT</strong> on this list: scalability, security, monitoring, CI/CD. Those matter for production. For a prototype, usability is what counts.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>A usable prototype has these four properties</li>
+<li>User input: the stakeholder can control what goes into the model</li>
+<li>Predictions: the model actually runs and produces output</li>
+<li>Understandable: the results make sense to someone who isn’t a data scientist</li>
+<li>It runs: you can start it up and someone can use it without your help</li>
+<li>Notice what’s NOT on this list: scalability, security, monitoring, CI/CD</li>
+<li>Those matter for production. For a prototype, usability is what counts.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="a-common-prototype-stack" class="slide level2 smaller">
+<h2>A Common Prototype Stack</h2>
+<p><br></p>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    User["👤 &lt;b&gt;User&lt;/b&gt;"] --&gt; A["&lt;b&gt;Streamlit&lt;/b&gt;&lt;br/&gt;User interface"]
+    A --&gt; B["&lt;b&gt;FastAPI&lt;/b&gt;&lt;br/&gt;Model serving"]
+    B --&gt; C["&lt;b&gt;MLflow&lt;/b&gt;&lt;br/&gt;Model registry"]
+
+    style User fill:#ffebee,stroke:#c62828,stroke-width:3px
+    style A fill:#e8f5e9
+    style B fill:#fff3e0
+    style C fill:#e1f5fe
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><br></p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 38%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Role</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Streamlit</strong></td>
+<td>User-facing interface</td>
+<td>No frontend skills needed</td>
+</tr>
+<tr class="even">
+<td><strong>FastAPI</strong></td>
+<td>Serve predictions via API</td>
+<td>Fast, Python-native, auto-docs</td>
+</tr>
+<tr class="odd">
+<td><strong>MLflow</strong></td>
+<td>Model versioning &amp; loading</td>
+<td>Track and retrieve models</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<ul>
+<li>This is a common stack we’ll use, and it’s the same stack used in the Rossmann project</li>
+<li>Notice the User on the left - they interact with Streamlit, not the technical components</li>
+<li>MLflow: you’ve already seen this for experiment tracking. Here we use it to store and load trained models.</li>
+<li>FastAPI: a Python web framework for building APIs. It’s fast, it auto-generates documentation, and it’s pure Python</li>
+<li>Streamlit: a Python library for building web UIs. You write Python, it generates a web app. No HTML, CSS, or JavaScript needed.</li>
+<li>This stack is intentionally simple: all Python, minimal dependencies, runs locally</li>
+<li>It’s also realistic: FastAPI is widely used in industry for model serving</li>
+<li>The user only sees Streamlit - the complexity is hidden behind the interface</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="prototype-architecture" class="slide level2 smaller">
+<h2>Prototype Architecture</h2>
+<div class="cell" data-reveal="true" data-fig-width="10" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A["👤 User"] --&gt; B["🖥️ Streamlit UI"]
+    B --&gt;|"API Request"| C["⚡ FastAPI"]
+    C --&gt;|"Load Model"| D["📦 MLflow Registry"]
+    D --&gt; C
+    C --&gt;|"Feature Engineering&lt;br/&gt;+ Prediction"| E["🤖 Model"]
+    E --&gt; C
+    C --&gt;|"Log"| F["📊 Prediction DB"]
+    C --&gt;|"Response"| B
+    B --&gt;|"Display"| A
+
+    style A fill:#f3e5f5
+    style B fill:#e8f5e9
+    style C fill:#fff3e0
+    style D fill:#e1f5fe
+    style E fill:#fce4ec
+    style F fill:#f5f5f5
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 44%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Responsibility</th>
+<th>User Sees?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Streamlit</strong></td>
+<td>Input forms, result display, monitoring dashboards</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><strong>FastAPI</strong></td>
+<td>Feature engineering, model serving, prediction logging</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>MLflow</strong></td>
+<td>Model storage, versioning, stage management</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>SQLite</strong></td>
+<td>Prediction history, drift detection data</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<div style="text-align: center; font-size: 1.2em;">
+<p>The user sees the <strong>interface</strong>. <br> The system handles the <strong>complexity</strong>.</p>
+</div>
+<aside class="notes">
+<ul>
+<li>Here’s how the pieces fit together in the Rossmann project</li>
+<li>The user interacts with Streamlit — they fill in a form or upload a CSV</li>
+<li>Streamlit sends the input to FastAPI as an API request</li>
+<li>FastAPI loads the model from MLflow (cached after first load for speed)</li>
+<li>FastAPI runs the full feature engineering pipeline — the user provides 7 simple fields, the API engineers 46 features</li>
+<li>The model generates predictions</li>
+<li>Predictions are logged to a SQLite database for monitoring</li>
+<li>Results are sent back to Streamlit and displayed to the user</li>
+<li>Key insight: the user never touches feature engineering, model loading, or any technical detail</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="the-rossmann-project" class="slide level2 smaller">
+<h2>The Rossmann Project</h2>
+<p><br></p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><strong>Sales forecasting</strong> for 1,115 Rossmann retail stores across Europe.</p>
+<ul>
+<li>Trained ensemble model (XGBoost, LightGBM, CatBoost)</li>
+<li>46 engineered features from 7 user inputs</li>
+<li>MLflow model registry with versioning</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<div class="cell" data-reveal="true" data-fig-width="4" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    A["XGBoost&lt;br/&gt;60%"] --&gt; D["Ensemble"]
+    B["LightGBM&lt;br/&gt;30%"] --&gt; D
+    C["CatBoost&lt;br/&gt;10%"] --&gt; D
+    D --&gt; E["Prediction"]
+
+    style A fill:#e1f5fe
+    style B fill:#e8f5e9
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+    style E fill:#fce4ec
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div></div>
+<p><br></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Next step:</strong></p>
+</div>
+<div class="callout-content">
+<p>How can we turn this into a <strong>prototype</strong> that a user could actually interact with, without needing to understand the underlying model or feature engineering?</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>This is the real project we’ll demo — Rossmann is a European drugstore chain</li>
+<li>The model predicts daily sales for individual stores</li>
+<li>It uses a weighted ensemble: XGBoost (60%), LightGBM (30%), CatBoost (10%)</li>
+<li>Key thing to notice: the user provides just 7 simple fields — store number, date, whether they’re open, promotion status, holidays</li>
+<li>The API handles all 46 features behind the scenes: calendar features, lag features, rolling statistics, store metadata</li>
+<li>This is the pattern you want to follow: simple inputs, complex processing hidden from the user</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-to-watch-for" class="slide level2">
+<h2>What to Watch For</h2>
+<p><br></p>
+<p>During the demo, pay attention to:</p>
+<ol type="1">
+<li class="fragment"><strong>How simple the user inputs are</strong> — 7 fields, not 46</li>
+<li class="fragment"><strong>How the system handles complexity</strong> — feature engineering is automatic</li>
+<li class="fragment"><strong>How predictions are displayed</strong> — clear, contextual, interpretable</li>
+<li class="fragment"><strong>How the pieces communicate</strong> — Streamlit → FastAPI → Model → Response</li>
+</ol>
+<aside class="notes">
+<ul>
+<li>Before we jump in, I want you to watch for these specific things</li>
+<li>The simplicity of the inputs is intentional: a store manager could use this</li>
+<li>Feature engineering is fully automated in the API — the user never sees it</li>
+<li>The predictions come back with context, not just a number</li>
+<li>Watch how Streamlit calls FastAPI and displays the results</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="from-architecture-to-code" class="slide level2 smaller">
+<h2>From Architecture to Code</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>System Architecture:</strong></p>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph Registry["MLflow Model Registry (Port 5000)"]
+        MR[(Model Storage)]
+        MV[Version Management]
+        MS[Stage Tracking]
+    end
+
+    subgraph API["FastAPI Service (Port 8000)"]
+        direction TB
+        ML[Model Loader]
+        PP[Prediction Pipeline]
+        FE[Feature Engineering]
+        VAL[Input Validation]
+    end
+
+    subgraph UI["Streamlit Dashboard (Port 8501)"]
+        direction TB
+        SP[Single Prediction]
+        BP[Batch Upload]
+        VIZ[Results Display]
+    end
+
+    subgraph User["End Users"]
+        
+    end
+
+    User --&gt; UI
+    UI --&gt;|HTTP POST| API
+    API --&gt;|Load Model| Registry
+    Registry --&gt;|Ensemble Model| API
+    API --&gt;|Predictions| UI
+    UI --&gt;|Results| User
+
+    style Registry fill:#e1f5ff
+    style API fill:#fff4e1
+    style UI fill:#f0f0f0
+    style User fill:#e8f5e9
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><strong>File Structure:</strong></p>
+<pre><code>rossmann-forecasting/
+├── deployment/
+│   ├── api/
+│   │   └── main.py          ← FastAPI app
+│   └── streamlit/
+│       ├── Home.py          ← Main UI
+│       └── pages/           ← Individual UI pages
+│           ├── 1_📊_Predictions.py
+│           └── 2_📈_Monitoring.py
+├── mlruns/                  ← MLflow tracking
+│   └── models/              ← Model artifacts
+│ 
+└── src/                     ← Source code</code></pre>
+</div></div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>FastAPI will use scripts from the <code>src/</code> directory for input validation, feature engineering, making predictions, etc.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>This slide connects the conceptual architecture to the actual code</li>
+<li>Left side: the simple architecture we’ve been discussing</li>
+<li>Right side: where these components actually live in the Rossmann project</li>
+<li>FastAPI app: deployment/api/main.py - this is the prediction API</li>
+<li>Feature engineering: deployment/api/features.py - handles all 46 features</li>
+<li>Streamlit UI: deployment/streamlit/ - the user interface with multiple pages</li>
+<li>MLflow: mlruns/ directory stores experiment tracking and model registry data</li>
+<li>Models: models/ directory contains saved model artifacts</li>
+<li>This is a clean, organized structure you can replicate in your own projects</li>
+<li>Notice the separation: API code is separate from UI code, making it easy to maintain</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="making-models-accessible-rest-apis" class="slide level2 smaller">
+<h2>Making Models Accessible: REST APIs</h2>
+<p><br></p>
+<div style="font-size: 1.3em;">
+<p><strong>Last class:</strong> MLflow manages and versions our models <br><br> <strong>This class:</strong> We need a way to <strong>interact</strong> with those models</p>
+</div>
+<p><br></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>REST API (Application Programming Interface)</strong></p>
+</div>
+<div class="callout-content">
+<p>A standardized way to send requests and receive responses over HTTP.</p>
+<ul>
+<li>Send input data → Get predictions back</li>
+<li>Language-agnostic (works with Python, R, JavaScript, etc.)</li>
+<li>Industry standard for model serving</li>
+</ul>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Last class we saw how MLflow tracks experiments, registers models, and manages versions</li>
+<li>MLflow gives us a registry - a central place where our models live</li>
+<li>But MLflow alone doesn’t let us actually USE the model - we need a way to send data and get predictions</li>
+<li>That’s where REST APIs come in - they’re a standardized way to interact with services over the web</li>
+<li>Think of an API as a waiter at a restaurant: you give the waiter your order (input), they take it to the kitchen (model), and bring back your food (prediction)</li>
+<li>REST APIs use HTTP - the same protocol your browser uses - so they’re language-agnostic</li>
+<li>You can call a Python API from R, JavaScript, curl, anything that speaks HTTP</li>
+<li>This is the industry standard for serving models - whether you’re at a startup or Google, you’re likely using REST APIs</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fastapi-building-rest-apis-in-python" class="slide level2 smaller">
+<h2>FastAPI: Building REST APIs in Python</h2>
+<p><br></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Why FastAPI?</strong></p>
+<ul>
+<li>Python-native (no new languages)</li>
+<li>Auto-generated documentation</li>
+<li>Built-in input validation</li>
+<li>Fast and production-ready</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>What it provides:</strong></p>
+<ul>
+<li><code>/predict</code> endpoint for predictions</li>
+<li><code>/health</code> endpoint for status checks</li>
+<li><code>/docs</code> interactive API explorer</li>
+<li>Type checking and error handling</li>
+</ul>
+</div></div>
+<p><br></p>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The limitation:</strong></p>
+</div>
+<div class="callout-content">
+<p>FastAPI is <strong>not a user interface</strong>. It’s designed for developers and systems, not stakeholders.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>FastAPI is a Python framework specifically designed for building REST APIs quickly</li>
+<li>Big advantage: it’s Python, so we don’t need to learn Java, Go, or other backend languages</li>
+<li>It auto-generates interactive documentation at /docs - you can test your API right in the browser</li>
+<li>It validates inputs automatically using Python type hints - if someone sends invalid data, FastAPI catches it</li>
+<li>And despite the name, it really is fast - comparable to Node.js and Go for performance</li>
+<li>In our Rossmann project, FastAPI provides several endpoints: /predict for getting predictions, /health for checking if the system is running, /docs for exploring the API</li>
+<li>The key limitation: while you CAN interact with the model through FastAPI, the interface is very technical</li>
+<li>It’s designed for developers making programmatic calls, or for other systems to integrate with</li>
+<li>A business stakeholder doesn’t want to write JSON and make HTTP POST requests</li>
+<li>Demo plan: I’ll show you MLflow UI with our registered models, then launch FastAPI and show the /docs endpoint, then make a prediction</li>
+<li>You’ll see that while it works, it’s not the kind of interface you’d hand to a store manager or executive</li>
+<li>This is exactly why we need Streamlit - to put a user-friendly face on this API</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="demo-fastapi" class="slide level2 smaller">
+<h2>Demo: FastAPI</h2>
+<p><br></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Launch the services:</strong></p>
+<ol type="1">
+<li>Start MLflow UI:</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/start_mlflow.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>Launch FastAPI:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/launch_api.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><br></p>
+<ul>
+<li>MLflow UI: <code>http://localhost:5000</code></li>
+<li>FastAPI: <code>http://localhost:8000/docs</code></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<div style="text-align: center;">
+<p><img data-src="assets/images/fastapi.png"></p>
+</div>
+</div></div>
+<aside class="notes">
+<ul>
+<li>Let’s see this in action - I’ll launch both services</li>
+<li>First, start MLflow UI with bash scripts/start_mlflow.sh - this opens the model registry on port 5000</li>
+<li>Navigate to localhost:5000 and show the registered models, point out the production version</li>
+<li>Second, launch FastAPI with bash scripts/launch_api.sh - this starts the API on port 8000</li>
+<li>Navigate to localhost:8000/docs - this is the auto-generated API documentation</li>
+<li>Show the /predict endpoint, click “Try it out”, enter some sample data as JSON</li>
+<li>Make a prediction and show the response</li>
+<li>Point out: this works, but imagine asking a store manager to write JSON and make POST requests</li>
+<li>This technical interface is exactly why we need Streamlit - to make this accessible</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="demo-streamlit-dashboard" class="slide level2 smaller">
+<h2>Demo: Streamlit Dashboard</h2>
+<p><br></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>System Flow:</strong></p>
+<div class="cell" data-reveal="true" data-fig-width="6" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[👤 User] --&gt; B[🎨 Streamlit]
+    B --&gt; C[⚡ FastAPI]
+    C --&gt; D[📦 MLflow]
+    D --&gt; C
+    C --&gt; B
+    B --&gt; A
+
+    style A fill:#e8f5e9
+    style B fill:#e1f5fe
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><br></p>
+<p><strong>Launch the full system:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/launch_dashboard.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Dashboard: <code>http://localhost:8501</code></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="assets/images/streamlit-home.png" style="width:100.0%"></p>
+</div></div>
+<aside class="notes">
+<ul>
+<li>Now let’s see the complete system with Streamlit as the user interface</li>
+<li>The diagram shows the full flow: User interacts with Streamlit, Streamlit calls FastAPI, FastAPI loads the model from MLflow, predictions flow back</li>
+<li>To launch everything at once, we can use the dashboard launch script: bash scripts/launch_dashboard.sh</li>
+<li>This starts all three services: MLflow (port 5000), FastAPI (port 8000), and Streamlit (port 8501)</li>
+<li>Navigate to localhost:8501 to see the Streamlit dashboard</li>
+<li>This is the home page - notice how different it is from the FastAPI docs</li>
+<li>We have a clean interface showing system status, API health, which model is loaded, and what’s in the registry</li>
+<li>This is what stakeholders need: a clear, visual interface that abstracts away the complexity</li>
+<li>No JSON, no POST requests, no technical jargon - just a dashboard they can use</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="getting-started-with-your-project" class="slide level2 smaller">
+<h2>Getting Started with Your Project</h2>
+<p><br></p>
+<p><strong>Recommended approach:</strong></p>
+<ol type="1">
+<li><strong>Start simple</strong>: Build a basic FastAPI app with a <code>/predict</code> endpoint
+<ul>
+<li>Tons of examples online - this is well-documented territory</li>
+</ul></li>
+<li><strong>Add your model</strong>: Load your trained model and serve predictions via the API
+<ul>
+<li>Test it with the auto-generated <code>/docs</code> interface</li>
+</ul></li>
+<li><strong>Build a UI</strong>: Create a simple Streamlit frontend that calls your API
+<ul>
+<li>Start with one input form and one prediction display</li>
+</ul></li>
+<li><strong>Iterate</strong>: Add features as needed (batch predictions, monitoring, etc.)</li>
+</ol>
+<p><br></p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Leverage AI tools!</strong></p>
+</div>
+<div class="callout-content">
+<p>Tasks like these are <strong>perfect</strong> for ChatGPT, Claude, or Gemini. There are thousands of FastAPI + Streamlit examples online, so these tools excel at generating working prototypes.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>You don’t need to build everything at once - start with the smallest useful prototype</li>
+<li>Step 1: Build a super basic FastAPI app - even just a “hello world” endpoint to understand the pattern</li>
+<li>There are tons of FastAPI tutorials online, so this is very accessible</li>
+<li>Step 2: Swap “hello world” for your actual model - load it and return predictions</li>
+<li>Test it using the /docs interface FastAPI generates - make sure it works before adding a UI</li>
+<li>Step 3: Build a simple Streamlit app - just one page with a form that sends data to your API</li>
+<li>Streamlit has great examples in their docs - you can get something working in an hour</li>
+<li>Step 4: Once you have the basics, iterate - add batch prediction, add monitoring, improve the UI</li>
+<li>Key insight: This is a perfect use case for AI coding assistants</li>
+<li>Since there are so many examples of FastAPI and Streamlit online, tools like ChatGPT and Claude can generate working code very effectively</li>
+<li>You can literally ask “Create a FastAPI endpoint that loads a sklearn model and returns predictions” and get a working example</li>
+<li>Same with Streamlit: “Create a Streamlit form that calls a FastAPI endpoint and displays the result”</li>
+<li>Use AI to accelerate the prototype - then customize it for your specific needs</li>
+<li>The goal is to make your model usable, not to become a web development expert</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="reflection" class="title-slide slide level1 center" data-background="#43464B">
+<h1>Reflection</h1>
+
+</section>
+<section id="your-project" class="slide level2 smaller">
+<h2>Your Project</h2>
+<p><br></p>
+<p>Think about your own project:</p>
+<p><br></p>
+<ul>
+<li>What are the <strong>inputs</strong> to your model?</li>
+<li>What does the <strong>output</strong> look like?</li>
+<li>Who is the <strong>user</strong>? What do they need the output to be?</li>
+<li>What would a <strong>simple interface</strong> look like?</li>
+<li>What do you envision the <strong>tech stack</strong> to look like?</li>
+</ul>
+<p><br></p>
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Project Planning</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s spend ~15min working in your group to discuss these questions and outline what a prototype might look like.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Take a minute to think about this for your own project</li>
+<li>Inputs: what does someone need to provide to get a prediction? Can you simplify it?</li>
+<li>Outputs: is it a number? A category? A ranking? How do you make it meaningful?</li>
+<li>User: is it a business stakeholder? An analyst? A manager? What do they care about?</li>
+<li>Interface: could you build a simple Streamlit app with a form and a results display?</li>
+<li>Drift: what in your data might change over time? Distributions? Relationships? Categories?</li>
+<li>You don’t need to answer all of these perfectly — but thinking about them now will save you time later</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="final-project-mvp" class="title-slide slide level1 center" data-background="#43464B">
+<h1>Final Project MVP</h1>
+<p>aka crap.0</p>
+</section>
+<section id="what-is-an-mvp" class="slide level2 smaller">
+<h2>What Is an MVP?</h2>
+<p><br></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="mvp-is-not">MVP is NOT</h3>
+<ul>
+<li>Perfect</li>
+<li>Scalable</li>
+<li>Fully tested</li>
+<li>Production-ready</li>
+<li>Beautiful</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="mvp-is">MVP IS</h3>
+<ul>
+<li><strong>Progress shown</strong> — components are working</li>
+<li><strong>Functional</strong> — core pieces operational</li>
+<li><strong>Demo-able</strong> — you can show what you’ve built</li>
+<li><strong>Clear vision</strong> — you know where you’re going</li>
+</ul>
+</div></div>
+<p><br></p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Minimum Viable Product</strong></p>
+</div>
+<div class="callout-content">
+<p>The smallest thing you can build that demonstrates <strong>progress</strong> towards your ML system.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>MVP stands for Minimum Viable Product</li>
+<li>The emphasis is on “minimum” and “viable” — not “perfect” or even fully integrated</li>
+<li>It’s NOT about building a complete system. It’s about showing meaningful progress.</li>
+<li>Do you have working components? Can you demo a data pipeline? Can you show model training and tracking?</li>
+<li>Components don’t need to be fully connected yet - that’s okay</li>
+<li>For this MVP, showing progress and having a clear plan is more important than a polished end-to-end system</li>
+<li>You might have a data pipeline working separately from model training - that’s fine</li>
+<li>You might be tracking experiments but don’t have a UI yet - that’s totally acceptable</li>
+<li>The key is: can you demo what you’ve built AND explain what comes next?</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="mvp-expectations-progress-over-perfection" class="slide level2">
+<h2>MVP Expectations: Progress Over Perfection</h2>
+<p><br></p>
+<div style="font-size: 1.2em; text-align: center;">
+<p><strong>I have LOW expectations for the MVP.</strong> <br> Components don’t need to be fully integrated yet.</p>
+</div>
+<p><br></p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>What’s acceptable:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Data pipeline working <strong>+</strong> Model training/logging working, but <strong>no UI yet</strong> ✓</li>
+<li>Some components operational but not fully connected ✓</li>
+<li>Partial implementation with clear vision for completion ✓</li>
+</ul>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Let me be very clear: I have low expectations for this MVP</li>
+<li>You might have a data pipeline working that ingests and prepares data</li>
+<li>And a separate workflow that trains a model, logs experiments, and can make predictions</li>
+<li>But maybe they’re not connected to a UI yet - that’s totally fine</li>
+<li>The goal is to make progress towards your final project and get feedback early</li>
+<li>You need to demo what you DO have built and functioning</li>
+<li>Then paint a clear picture of what you expect the final working prototype to look like</li>
+<li>This is about showing progress and getting course-corrected if needed</li>
+<li>It’s NOT about having a polished, fully integrated system yet</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="mvp-requirements" class="slide level2 smaller">
+<h2>MVP Requirements</h2>
+<p><strong>What I’m looking for:</strong></p>
+<ol type="1">
+<li><strong>A clear vision</strong> of your complete system architecture
+<ul>
+<li>System diagram showing data flow, model training, and planned deployment</li>
+</ul></li>
+<li><strong>Working components</strong> that demonstrate progress
+<ul>
+<li>Data pipeline (ingestion, validation, versioning)</li>
+<li>ML model development (experiment tracking, model versioning)</li>
+</ul></li>
+<li><strong>A demo</strong> of what you’ve built so far
+<ul>
+<li>Show the components working, even if not fully integrated</li>
+</ul></li>
+<li><strong>A plan</strong> for completion
+<ul>
+<li>What challenges remain? What are your next steps?</li>
+</ul></li>
+</ol>
+<p><br></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Bonus: System Integration (Extra Credit)</strong></p>
+</div>
+<div class="callout-content">
+<p>If you build a FastAPI or Streamlit app to showcase predictions, you can earn extra credit — but it’s NOT required for the MVP.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>I want to see four things from your MVP</li>
+<li>First: A clear architectural vision - show me a system diagram that illustrates the full prototype</li>
+<li>Even if you haven’t built everything, the diagram shows you’ve thought through how the pieces will connect</li>
+<li>This includes data ingestion, processing, feature engineering, model experimentation, and your planned deployment</li>
+<li>Second: Working components - show me actual functioning pieces</li>
+<li>Data pipeline: can you ingest data, validate it, version it? This could be batch CSVs or streaming - whatever fits your project</li>
+<li>ML model development: are you tracking experiments with MLflow or W&amp;B? Do you have versioned models in a registry?</li>
+<li>Components don’t need to be fully integrated yet - that’s okay</li>
+<li>Third: Demo what you’ve built - show me the pipeline running, show me experiment tracking, show me models being versioned</li>
+<li>Fourth: Tell me your plan - what’s blocking you? What remains to be done for the final project?</li>
+<li>The bonus is system integration - if you build a UI or API, that’s extra credit, but focus on the fundamentals first</li>
+<li>The key message: show progress on real components AND demonstrate you understand the full system architecture</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="deliverable-recorded-presentation" class="slide level2 smaller">
+<h2>Deliverable: Recorded Presentation</h2>
+<p><br></p>
+<p><strong>5-10 minute recorded presentation and demo</strong> covering:</p>
+<ol type="1">
+<li class="fragment"><p><strong>Problem &amp; Purpose</strong>: What problem are you solving and why does it matter?</p></li>
+<li class="fragment"><p><strong>System Diagram</strong>: High-level architecture showing data ingestion, processing, feature engineering, model experimentation, and planned deployment</p></li>
+<li class="fragment"><p><strong>Prototype Demo</strong>: Show what you’ve built - data pipeline, model training, experiment tracking, etc.</p></li>
+<li class="fragment"><p><strong>Challenges &amp; Next Steps</strong>: What problems do you anticipate? What remains to be done?</p></li>
+</ol>
+<aside class="notes">
+<ul>
+<li>This is a GROUP submission - one presentation per team</li>
+<li>Everyone should contribute, but not everyone needs to talk in the video</li>
+<li>Start with a clear problem statement - what are you trying to solve and why it matters</li>
+<li>Show a system diagram that illustrates your architecture - even if parts aren’t built yet</li>
+<li>This helps you think through the full system and helps me understand your vision</li>
+<li>Demo what you have working: show the data pipeline ingesting and processing data</li>
+<li>Show your experiment tracking in MLflow or W&amp;B</li>
+<li>Show a model being trained and versioned</li>
+<li>If you have a UI, show it - but it’s not required for the MVP</li>
+<li>End with challenges and next steps: what’s blocking you? What do you need to finish?</li>
+<li>This gives me a chance to provide feedback before the final submission</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="grading-rubric-overview" class="slide level2 smaller">
+<h2>Grading Rubric Overview</h2>
+<p><br></p>
+<div style="text-align: center;">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Clarity of Problem &amp; ML System Purpose</strong></td>
+<td>4 pts</td>
+</tr>
+<tr class="even">
+<td><strong>Clarity of ML System Diagram</strong></td>
+<td>4 pts</td>
+</tr>
+<tr class="odd">
+<td><strong>Implementation of Data Pipeline</strong></td>
+<td>4 pts</td>
+</tr>
+<tr class="even">
+<td><strong>ML Model Development</strong></td>
+<td>4 pts</td>
+</tr>
+<tr class="odd">
+<td><strong>Presentation Quality</strong></td>
+<td>4 pts</td>
+</tr>
+<tr class="even">
+<td><strong>System Integration</strong></td>
+<td>Extra Credit (+0-2 pts)</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<p><strong>Total: 20 points (+ extra credit)</strong></p>
+</div>
+<aside class="notes">
+<ul>
+<li>The rubric is designed to evaluate both what you’ve built and how you communicate it</li>
+<li>Each category is worth 4 points with specific criteria for full, partial, and no credit</li>
+<li>The system integration is extra credit - not required but encouraged</li>
+<li>Let’s look at each category in detail</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="grading-criteria-problem-system-diagram" class="slide level2 smaller">
+<h2>Grading Criteria: Problem &amp; System Diagram</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Clarity of Problem &amp; ML System Purpose</strong> (4 pts)</p>
+<ul>
+<li><strong>4 pts (Good)</strong>: Clearly defines the problem and explains why ML is necessary</li>
+<li><strong>2 pts (Ok)</strong>: Problem is somewhat defined but lacks depth or clarity</li>
+<li><strong>0 pts (Bad)</strong>: Problem is unclear or missing; no justification for ML</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Clarity of ML System Diagram</strong> (4 pts)</p>
+<ul>
+<li><strong>4 pts (Good)</strong>: Diagram effectively illustrates data pipeline, model experimentation, and planned deployment</li>
+<li><strong>2 pts (Ok)</strong>: Diagram is present but lacks key elements or clarity</li>
+<li><strong>0 pts (Bad)</strong>: No diagram, or diagram is incomplete/incorrect</li>
+</ul>
+</div></div>
+<aside class="notes">
+<ul>
+<li>Problem &amp; Purpose: I want to understand what you’re solving and why it matters</li>
+<li>Good (4 pts): Clear problem statement with context and explanation of why ML is the right approach</li>
+<li>Ok (2 pts): You explain the problem but it’s vague or doesn’t justify why ML is needed</li>
+<li>Bad (0 pts): No clear problem or you skip this entirely</li>
+<li>System Diagram: Show me the architecture, even if you haven’t built everything yet</li>
+<li>Good (4 pts): Clear diagram showing data flow, model training, and deployment strategy</li>
+<li>Ok (2 pts): Diagram exists but missing pieces or hard to understand</li>
+<li>Bad (0 pts): No diagram or diagram doesn’t make sense</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="grading-criteria-implementation" class="slide level2 smaller">
+<h2>Grading Criteria: Implementation</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Implementation of Data Pipeline</strong> (4 pts)</p>
+<ul>
+<li><strong>4 pts (Good)</strong>: Functional pipeline with ingestion, processing, validation, and versioning</li>
+<li><strong>2 pts (Ok)</strong>: Partial implementation; some pipeline elements missing or unclear</li>
+<li><strong>0 pts (Bad)</strong>: No data pipeline, or implementation is incorrect</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>ML Model Development</strong> (4 pts)</p>
+<ul>
+<li><strong>4 pts (Good)</strong>: Model is trained with experiment tracking and versioning using appropriate tools</li>
+<li><strong>2 pts (Ok)</strong>: Model is trained but lacks proper tracking and versioning</li>
+<li><strong>0 pts (Bad)</strong>: No trained model, or no evidence of experiment tracking/versioning</li>
+</ul>
+</div></div>
+<aside class="notes">
+<ul>
+<li>Data Pipeline: Can you get data into your system, validate it, and version it?</li>
+<li>Good (4 pts): Working pipeline that ingests data, validates quality, versions it, and stores it efficiently</li>
+<li>Ok (2 pts): Some pieces work but others are missing - maybe you have ingestion but no validation</li>
+<li>Bad (0 pts): No pipeline or it doesn’t work at all</li>
+<li>ML Model Development: Are you tracking your experiments and versioning your models?</li>
+<li>Good (4 pts): Using MLflow or W&amp;B to log experiments with hyperparameters, metrics, and artifacts; models are versioned in a registry</li>
+<li>Ok (2 pts): You trained a model but didn’t properly track experiments or version it</li>
+<li>Bad (0 pts): No trained model or no evidence of tracking/versioning</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="grading-criteria-presentation-extra-credit" class="slide level2 smaller">
+<h2>Grading Criteria: Presentation &amp; Extra Credit</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Presentation Quality</strong> (4 pts)</p>
+<ul>
+<li><strong>4 pts (Good)</strong>: Problem, approach, and demo are clearly communicated with a structured presentation</li>
+<li><strong>2 pts (Ok)</strong>: Presentation is somewhat clear but lacks organization or detail</li>
+<li><strong>0 pts (Bad)</strong>: Poor or missing presentation; lacks clarity and structure</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>System Integration</strong> (Extra Credit)</p>
+<ul>
+<li><strong>+2 pts</strong>: Fully functioning API/web app showcasing predictions or key functionalities</li>
+<li><strong>+1 pt</strong>: Partial system integration effort shown but incomplete</li>
+<li><strong>0 pts</strong>: No attempt at system integration</li>
+</ul>
+</div></div>
+<aside class="notes">
+<ul>
+<li>Presentation Quality: How well do you communicate your work?</li>
+<li>Good (4 pts): Clear, organized presentation that walks through the problem, shows the demo, and explains next steps</li>
+<li>Ok (2 pts): You cover the material but it’s disorganized or lacks important details</li>
+<li>Bad (0 pts): Presentation is confusing, incomplete, or missing</li>
+<li>System Integration: This is EXTRA CREDIT - not required but encouraged</li>
+<li>+2 pts: You built a working FastAPI or Streamlit app that demonstrates predictions - this is impressive for an MVP</li>
+<li>+1 pt: You started building an app but it’s not fully functional yet - still shows initiative</li>
+<li>0 pts: No UI/API integration, which is totally fine - you can still get full credit on the other categories</li>
+<li>Remember: focus on the data pipeline and model development first - the UI is a bonus</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="peer-review-requirement" class="slide level2">
+<h2>Peer Review Requirement</h2>
+<p><br></p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>After submitting your MVP:</strong></p>
+</div>
+<div class="callout-content">
+<p>Each student must complete peer reviews:</p>
+<ul>
+<li>Review <strong>two other group’s presentations</strong></li>
+<li>Fill out the grading rubric for each</li>
+<li>Provide at least <strong>100 words of constructive feedback</strong></li>
+</ul>
+<p><strong>Failure to complete peer review = 10% deduction from engagement grade</strong></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>This isn’t just a box to check - peer review is valuable for your learning</li>
+<li>You’ll see how other teams approached the same problems</li>
+<li>You’ll practice evaluating ML systems and providing constructive feedback</li>
+<li>Each student reviews TWO other presentations</li>
+<li>Fill out the grading rubric honestly - use the same criteria I’m using</li>
+<li>Provide at least 100 words (one paragraph) of written feedback</li>
+<li>Be constructive: what did they do well? What could be improved?</li>
+<li>Missing the peer review will cost you 10% of your engagement grade for the course</li>
+<li>Take it seriously - both for your own learning and to help your classmates</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="submission-guidelines" class="slide level2">
+<h2>Submission Guidelines</h2>
+<p><br></p>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important Submission Details:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>Single group submission</strong> - only one team member needs to submit</li>
+<li><strong>Upload the recorded video</strong> - no need to submit slides or other documents</li>
+<li><strong>Give yourself time!</strong> - Don’t wait until 11:59 PM to upload a large video file</li>
+<li><strong>Recommended</strong>: Have everything ready by mid-day with several hours of cushion</li>
+</ul>
+<p>If you’re uploading a 4.7 MB MP4 at 11:59 PM, don’t expect it to complete on time — and don’t expect extra time from the instructor.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>This is a group submission - only ONE person needs to upload the video</li>
+<li>You don’t need to submit slides, documentation, or anything else - just the recorded presentation</li>
+<li>The most common mistake: waiting until the last minute to upload a large video file</li>
+<li>If multiple group members submit, only the most recent submission will be kept for all members</li>
+<li>I strongly recommend finishing early and uploading by mid-day on the deadline</li>
+<li>Give yourself several hours of cushion for the upload</li>
+<li>Canvas can be slow, files can be large, internet can be unreliable</li>
+<li>If you’re trying to upload a big file at 11:59 PM and it doesn’t complete, that’s on you</li>
+<li>I will NOT grant extensions for technical issues that could have been avoided</li>
+<li>Plan ahead, finish early, upload with plenty of time to spare</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="closing" class="title-slide slide level1 center" data-background="#43464B">
+<h1>Closing</h1>
+
+</section>
+<section id="key-takeaways" class="slide level2 smaller">
+<h2>Key Takeaways</h2>
+<p><br></p>
+<ol type="1">
+<li>Models create value when they’re <strong>used</strong>, not when they’re trained</li>
+<li>Deployment means making models <strong>accessible and interactive</strong>, not just production-ready</li>
+<li>You don’t need production infrastructure to build <strong>usable prototypes</strong></li>
+<li><strong>REST APIs</strong> provide a standard way to interact with models programmatically</li>
+<li><strong>FastAPI + Streamlit + MLflow</strong> is a practical, Python-native prototype stack</li>
+<li>For your MVP: <strong>show progress</strong>, demo what works, and have a clear vision</li>
+</ol>
+<aside class="notes">
+<ul>
+<li>Let’s recap the key ideas from today</li>
+<li>Value comes from use - experiments and registered models don’t create value until someone can interact with them</li>
+<li>Deployment isn’t about production infrastructure - it’s about making models accessible</li>
+<li>You can build functional prototypes without complex infrastructure</li>
+<li>REST APIs are the industry standard for making models accessible programmatically</li>
+<li>FastAPI + Streamlit + MLflow are tools you can learn quickly and use in industry</li>
+<li>MVP thinking for your project: you don’t need everything fully integrated - show working components and a clear plan</li>
+<li>For your final projects, demonstrating progress on real components is more valuable than a perfect plan</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="resources" class="slide level2 smaller">
+<h2>Resources</h2>
+<p><br></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Resource</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FastAPI docs</td>
+<td><a href="https://fastapi.tiangolo.com">fastapi.tiangolo.com</a></td>
+</tr>
+<tr class="even">
+<td>Streamlit docs</td>
+<td><a href="https://docs.streamlit.io">docs.streamlit.io</a></td>
+</tr>
+<tr class="odd">
+<td>MLflow docs</td>
+<td><a href="https://mlflow.org">mlflow.org</a></td>
+</tr>
+<tr class="even">
+<td>Rossmann project</td>
+<td><a href="https://github.com/bradleyboehmke/rossmann-forecasting">github.com/bradleyboehmke/rossmann-forecasting</a></td>
+</tr>
+<tr class="odd">
+<td>Workshop materials</td>
+<td><em>See course repository</em></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<ul>
+<li>Here are the key resources to help you get started</li>
+<li>FastAPI documentation is excellent - the tutorial section walks you through building an API step by step</li>
+<li>Streamlit has great docs and a gallery of example apps you can learn from</li>
+<li>MLflow docs cover model serving and the registry - particularly useful for loading models in your API</li>
+<li>The Rossmann project is a complete reference implementation showing all these pieces working together</li>
+<li>Workshop materials including slides and code examples are in the course repository</li>
+<li>Remember: these tools have tons of examples online, so AI assistants like ChatGPT and Claude are very effective for getting started</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p><a href="https://bradleyboehmke.github.io/model-deployment-prototype">https://bradleyboehmke.github.io/model-deployment-prototype</a></p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
